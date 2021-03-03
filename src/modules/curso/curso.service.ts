@@ -2,10 +2,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {status} from '../../shared/entity-status.enum';
+import { plainToClass } from 'class-transformer';
 import {CursoRepository} from "./curso.repository";
 import {Curso} from "./curso.entity";
 import { ReadCursoDto } from "./dto/read-curso.dto";
-import { plainToClass } from 'class-transformer';
+
 
 
 @Injectable()
