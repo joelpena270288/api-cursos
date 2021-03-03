@@ -1,18 +1,19 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { CursoService } from "./curso.service";
 import {Curso} from "./curso.entity";
+import {ReadCursoDto} from "./dto/read-curso.dto";
 @Controller('curso')
 export class CursoController{ 
 constructor(private readonly _cursoService: CursoService){
 
 } 
 @Get(':cursoid')
- getCurso(@Param('cursoid', ParseIntPipe) cursoid: number): Promise<Curso>{
+ getCurso(@Param('cursoid', ParseIntPipe) cursoid: number): Promise<ReadCursoDto>{
     return this._cursoService.get(cursoid);
     
 }
 @Get()
- getRoles(): Promise<Curso[]>{
+ getAllCurso(): Promise<ReadCursoDto[]>{
   return this._cursoService.getAll();
     
 } 
@@ -30,6 +31,5 @@ updateRole(@Param('cursoid', ParseIntPipe) cursoid:number, @Body() role: Curso){
 @Delete(':cursoid')
 deleteRole(@Param('cursoid', ParseIntPipe) cursoid: number){
  return this._cursoService.delete(cursoid); 
-
 }
 }

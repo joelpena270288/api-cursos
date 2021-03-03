@@ -4,6 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {status} from '../../shared/entity-status.enum';
 import {CursoRepository} from "./curso.repository";
 import {Curso} from "./curso.entity";
+import { ReadCursoDto } from "./dto/read-curso.dto";
+import { plainToClass } from 'class-transformer';
+
 
 @Injectable()
 export class CursoService {
@@ -16,7 +19,7 @@ export class CursoService {
         const savedCurso: Curso = await this._cursoRepository.save(curso);
         return curso; 
       }
-    async get(id: number): Promise<Curso>{
+    async get(id: number): Promise<ReadCursoDto>{
         if(!id){
           throw new BadRequestException("id must be sent");  
         }
@@ -26,16 +29,16 @@ export class CursoService {
          if(!curso){
            throw new NotFoundException("this course does not found");  
          }
-         return curso;
+         return plainToClass(ReadCursoDto, curso);
 
     }
-    async getAll(): Promise<Curso[]>{
+    async getAll(): Promise<ReadCursoDto[]>{
        
         const curso: Curso[] = await this._cursoRepository.find({
            where: {status: status.ACTIVE},
          });
-        
-         return curso;
+         return curso.map((curso: Curso)=>plainToClass(ReadCursoDto,curso));
+         
 
     }
    
