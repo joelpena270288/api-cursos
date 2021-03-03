@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PreguntaHtmlController } from './pregunta-html.controller';
+import { PreguntaHtmlController } from '../pregunta-html.controller';
 
 describe('PreguntaHtmlController', () => {
   let controller: PreguntaHtmlController;

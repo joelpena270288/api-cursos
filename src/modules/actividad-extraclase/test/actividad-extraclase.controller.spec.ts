@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ActividadExtraclaseController } from './actividad-extraclase.controller';
+import { ActividadExtraclaseController } from '../actividad-extraclase.controller';
 
 describe('ActividadExtraclaseController', () => {
   let controller: ActividadExtraclaseController;
