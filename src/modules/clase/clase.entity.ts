@@ -12,17 +12,18 @@ export class Clase extends BaseEntity{
     @Column()
     nota: number;
     @Column()
-    fecha_inicio:Date;
-  
-      @ManyToOne(type => Modulo, modulo => modulo.clases,{eager:false})
+    fecha_inicio:Date;  
+    @ManyToOne(type => Modulo, modulo => modulo.clases,{eager:false})
     @JoinColumn([{ name: "modulo_Id", referencedColumnName: "id" }])
     @Column()
      modulo_Id: number; 
      modulo:Modulo;
-      @OneToMany(type=> Actividades, actividad=>actividad.clase,{eager:false})
-      actividades: Actividades[];  
-    @CreateDateColumn({type:'timestamp',name: 'created_at'})
-    createdAt:Date;
-    @CreateDateColumn({type:'timestamp', name: 'updated_at'})
-    updatedAt:Date;
+     @Column({type: 'varchar',default: 'ACTIVE', length: 8})
+     status: string;
+     @OneToMany(type=> Actividades, actividad=>actividad.clase,{eager:false})
+     actividades: Actividades[];  
+     @CreateDateColumn({type:'timestamp',name: 'created_at'})
+     createdAt:Date;
+     @CreateDateColumn({type:'timestamp', name: 'updated_at'})
+     updatedAt:Date;
 }

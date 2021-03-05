@@ -17,9 +17,9 @@ export class ModuloController {
         
     } 
     @Post()
-    createModulo( @Body() idcurso: number,@Body() modulo: Modulo): Promise<Modulo>{
+    createModulo(@Body() modulo: Modulo): Promise<Modulo>{
      
-      return this._moduloService.create(idcurso,modulo); 
+      return this._moduloService.create(modulo); 
      
     }
     @Patch(':moduloid')

@@ -17,12 +17,12 @@ export class ModuloService {
         private readonly  _cursoRepository: CursoRepository,
               
     ){}
-    async create(idcurso:number, modulo:Modulo ): Promise<Modulo>{ 
-        const founcurso:Curso = await this._cursoRepository.findOne(idcurso);
+    async create(modulo:Modulo ): Promise<Modulo>{ 
+      /*  const founcurso:Curso = await this._cursoRepository.findOne(modulo.curso_Id);
         if(!founcurso){
             throw new BadRequestException("Course not exists");
-        }  
-        modulo.curso_Id = idcurso;     
+        } */
+           
         const savedModulo: Modulo = await this._moduloRepository.save(modulo);
         return modulo; 
       }
