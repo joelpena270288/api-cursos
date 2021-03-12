@@ -1,17 +1,26 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CursoService } from "./curso.service";
-import {Curso} from "./curso.entity";
-import {ReadCursoDto} from "./dto/read-curso.dto";
+import { Curso } from './curso.entity';
+import { ReadCursoDto } from "./dto/read-curso.dto";
 @Controller('curso')
-export class CursoController{ 
-constructor(private readonly _cursoService: CursoService){
+export class CursoController {
+  constructor(private readonly _cursoService: CursoService) {}
 
-} 
-@Get(':cursoid')
- getCurso(@Param('cursoid', ParseIntPipe) cursoid: number): Promise<ReadCursoDto>{
+    @Get(':cursoid')
+     getCurso(
+    @Param('cursoid', ParseIntPipe) cursoid: number,
+  ): Promise<ReadCursoDto> {
     return this._cursoService.get(cursoid);
-    
-}
+     }
 @Get()
  getAllCurso(): Promise<ReadCursoDto[]>{
   return this._cursoService.getAll();

@@ -22,7 +22,7 @@ export class PreguntaHtml extends BaseEntity{
     @JoinColumn([{ name: "evaluacion_Id", referencedColumnName: "id" }])
     @Column()
      evaluacion_Id: number; 
-     evaluacion: Evaluacion; 
+     evaluacion: Promise< Evaluacion>; 
      
 
 }

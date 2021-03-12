@@ -17,9 +17,9 @@ export class UserController {
       
   }
   
-  @Roles(RoleType.ADMIN, RoleType.PROFESOR,RoleType.GENERAL)
-  @UseGuards(AuthGuard(), RoleGuard)
-  @Get()
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.GENERAL)
+  //@UseGuards(AuthGuard(), RoleGuard)
+ @Get()
   getUsers(): Promise<ReadUserDto[]>{
     return this._userService.getAll();
      
