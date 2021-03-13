@@ -24,7 +24,7 @@ export class ModuloService {
         if(!founcurso){
             throw new BadRequestException("Course not exists");
         } */
-
+     
     const savedModulo: Modulo = await this._moduloRepository.save(modulo);
     return modulo;
   }
@@ -48,7 +48,7 @@ export class ModuloService {
   }
   async getAllByIdCurso(cursoid: number): Promise<Modulo[]> {
     const modulo: Modulo[] = await this._moduloRepository.find({
-      where: { status: status.ACTIVE, curso_Id: cursoid },
+      where: { status: status.ACTIVE, curso: cursoid },
     });
     return modulo;
   }

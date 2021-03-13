@@ -22,17 +22,12 @@ export class Clase extends BaseEntity {
   nota: number;
   @Column()
   fecha_inicio: Date;
-  @ManyToOne((type) => Modulo, (modulo) => modulo.clases, { eager: false })
-  @JoinColumn([{ name: 'modulo_Id', referencedColumnName: 'id' }])
-  @Column()
-  modulo_Id: number;
-  modulo: Promise<Modulo>;
+  @ManyToOne(() => Modulo, (modulo) => modulo.clases)
+  modulo: Modulo;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
   status: string;
-  @OneToMany((type) => Actividades, (actividad) => actividad.clase, {
-    eager: false,
-  })
-  actividades: Promise<Actividades[]>;
+  @OneToMany(() => Actividades, (actividad) => actividad.clase)
+  actividades: Actividades[];
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

@@ -19,13 +19,11 @@ export class Nota extends BaseEntity {
   nota: number;
   ultima_actividad: number;
 
-  @ManyToOne((type) => User, (users) => users.notas, { eager: false })
-  @JoinColumn([{ name: 'user_Id', referencedColumnName: 'id' }])
-  @Column()
-  user_Id: number;
-  user: Promise<User>;
-  @OneToOne((type) => Actividades, (actividades) => actividades.id)
-  @JoinColumn({ name: 'actividad_id' })
+  @ManyToOne(() => User, users => users.notas)
+   user: User;
+  @OneToOne(() => Actividades)
+  @JoinColumn()
+  actividades:Actividades
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

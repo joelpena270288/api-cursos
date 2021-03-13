@@ -33,11 +33,9 @@ export class ClaseService {
     }
     return clase;
   }
-  async getAll(): Promise<Clase[]> {
-    const clase: Clase[] = await this._claseRepository.find({
-      where: { status: status.ACTIVE },
-    });
-    return clase;
+  async getAll(): Promise<any> {
+    return await this._claseRepository.find({ relations: ["actividades"] });
+  
   }
 
   async update(claseid: number, clase: Clase): Promise<Clase> {
@@ -63,5 +61,12 @@ export class ClaseService {
     }
     await this._claseRepository.update(claseId, { status: status.INACTIVE });
     return true;
+  }
+  async getAllByIdModulo(moduloid: number): Promise<Clase[]> {
+    const clase: Clase[] = await this._claseRepository.find({
+       relations: ["actividades"],
+      where: { status: status.ACTIVE, modulo: moduloid },
+    });
+    return clase;
   }
 }

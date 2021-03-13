@@ -30,6 +30,6 @@ export class Curso extends BaseEntity {
   updatedAt: Date;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
   status: string;
-  @OneToMany((type) => Modulo, (modulo) => modulo.curso, { eager: false })
-  modulos: Promise<Modulo[]>;
+  @OneToMany(type => Modulo, modulo => modulo.curso)
+  modulos: Modulo[];
 }

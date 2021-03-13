@@ -34,4 +34,10 @@ updateclase(@Param('claseid', ParseIntPipe) claseid:number, @Body() clase: Clase
 deleteClase(@Param('claseid', ParseIntPipe) claseid: number){
  return this._claseService.delete(claseid); 
 }
+@Get('/byidmodulo/:idmodulo')
+getAllClseByIdModulo(
+  @Param('idmodulo', ParseIntPipe) idmodulo: number,
+): Promise<Clase[]> {
+  return this._claseService.getAllByIdModulo(idmodulo);
+}
 }

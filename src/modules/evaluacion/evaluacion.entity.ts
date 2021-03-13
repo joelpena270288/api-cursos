@@ -33,15 +33,15 @@ export class Evaluacion extends BaseEntity {
 
   actividad: Promise< Actividades>;
   @OneToMany(
-    (type) => PreguntaHtml,
-    (preguntahtml) => preguntahtml.evaluacion,
-    { eager: true },
+    () => PreguntaHtml,
+    preguntahtml => preguntahtml.evaluacion,
+    
   )
-  preguntas_html: Promise<PreguntaHtml[]>;
+  preguntas_html: PreguntaHtml[];
   @OneToMany(
-    (type) => ActividadesExtraclase,
-    (actividadextraclase) => actividadextraclase.evaluacion,
-    { eager: true },
+    () => ActividadesExtraclase,
+    actividadextraclase => actividadextraclase.evaluacion
+    
   )
-  actividades_extraclases: Promise< PreguntaHtml[]>;
+  actividades_extraclases: PreguntaHtml[];
 }

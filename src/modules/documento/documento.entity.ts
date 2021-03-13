@@ -17,19 +17,13 @@ export class Documento extends BaseEntity {
   @Column()
   nombre: string;
   @Column()
-  enlace: string;
+  link: string;
   @Column()
   nivel: number;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  @ManyToOne((type) => Actividades, (actividades) => actividades.documentos, {
-    eager: false,
-  })
-  @JoinColumn([{ name: 'actividad_Id', referencedColumnName: 'id' }])
-  @Column()
-  actividad_Id: number;
-
-  actividad: Promise<Actividades>;
+  @ManyToOne(() => Actividades, actividades => actividades.documentos)
+  actividad: Actividades;
 }

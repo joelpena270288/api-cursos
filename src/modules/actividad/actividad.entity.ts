@@ -28,25 +28,16 @@ export class Actividades extends BaseEntity {
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  @ManyToOne((type) => Clase, (clase) => clase.actividades, { eager: false })
-  @JoinColumn([{ name: 'clase_Id', referencedColumnName: 'id' }])
-  @Column()
-  clase_Id: number;
-  clase: Promise<Clase>;
+  @ManyToOne(() => Clase, (clase) => clase.actividades)  
+  clase: Clase;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
   status: string;
-  @OneToMany((type) => Video, (video) => video.actividad, { eager: false })
-  videos: Promise<Video[]>;
-  @OneToMany((type) => Documento, (documento) => documento.actividad, {
-    eager: false,
-  })
-  documentos:Promise<Documento[]>;
-  @OneToMany((type) => Contenido, (contenido) => contenido.actividad, {
-    eager: false,
-  })
+  @OneToMany(() => Video, video => video.actividad)
+  video: Video;
+  @OneToMany(() => Documento, documento => documento.actividad)
+  documentos:Documento[];
+  @OneToMany(() => Contenido, contenido => contenido.actividad)
   contenidos: Contenido[];
-  @OneToMany((type) => Evaluacion, (evaluacion) => evaluacion.actividad, {
-    eager: false,
-  })
-  evaluaciones: Promise<Evaluacion[]>;
+  @OneToMany(() => Evaluacion, evaluacion => evaluacion.actividad)
+  evaluaciones: Evaluacion[];
 }

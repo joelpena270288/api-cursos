@@ -18,11 +18,8 @@ export class PreguntaHtml extends BaseEntity{
     @CreateDateColumn({type:'timestamp', name: 'updated_at'})
     updatedAt:Date;
     
-    @ManyToOne(type => Evaluacion, evaluaciones => evaluaciones.preguntas_html,{eager:false})
-    @JoinColumn([{ name: "evaluacion_Id", referencedColumnName: "id" }])
-    @Column()
-     evaluacion_Id: number; 
-     evaluacion: Promise< Evaluacion>; 
+    @ManyToOne(() => Evaluacion, evaluaciones => evaluaciones.preguntas_html)
+   evaluacion: Evaluacion; 
      
 
 }

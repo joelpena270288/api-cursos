@@ -18,15 +18,15 @@ export class EstadoCurso extends BaseEntity {
   ultima_clase: number;
   @Column()
   ultima_seccion: number;
-  @ManyToOne((type) => User, (user) => user.estadocursos, { eager: false })
-  @JoinColumn([{ name: 'user_Id', referencedColumnName: 'id' }])
-  @Column()
-  user_Id: number;
-  user: Promise< User>;
+  @ManyToOne(() => User, user => user.estadocursos)
+  
+  user: User;
   @Column()
   status: string;
-  @OneToOne((type) => Curso, (curso) => curso.id)
-  @JoinColumn({ name: 'curso_id' })
+  @OneToOne(() => Curso)
+  @JoinColumn()
+    curso: Curso;
+  
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

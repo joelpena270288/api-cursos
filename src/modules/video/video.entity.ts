@@ -17,18 +17,7 @@ export class Video extends BaseEntity {
   @Column()
   nombre: string;
   @Column()
-  enlace: string;
-  @Column()
-  nivel: number;
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date;
-  @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date;
-  @ManyToOne((type) => Actividades, (actividades) => actividades.videos, {
-    eager: false,
-  })
-  @JoinColumn([{ name: 'actividad_Id', referencedColumnName: 'id' }])
-  @Column()
-  actividad_Id: number;
-  actividad: Promise<Actividades>;
+  link: string;
+  @ManyToOne(() => Actividades, (actividad) => actividad.video)
+  actividad: Actividades;
 }
