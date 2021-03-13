@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ActividadRepository } from './actividad.repository';
 import { ClaseRepository } from '../clase/clase.repository';
 import { Actividades } from './actividad.entity';
-import { Clase } from '../clase/clase.entity';
 import { status } from '../../shared/entity-status.enum';
 
 @Injectable()

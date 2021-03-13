@@ -18,8 +18,7 @@ export class Documento extends BaseEntity {
   nombre: string;
   @Column()
   link: string;
-  @Column()
-  nivel: number;
+ 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EvaluacionService } from './evaluacion.service';
-import { EvaluacionRepository } from "./evalucion.repository";
+import { EvaluacionRepository } from "./evaluacion.repository";
 import { ActividadRepository } from "../actividad/actividad.repository";
 import { EvaluacionController } from './evaluacion.controller';
 

@@ -17,6 +17,8 @@ export class Evaluacion extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
   @Column()
+  nombre: string;
+  @Column()
   punto: number;
   @Column()
   descripcion: string;
@@ -24,14 +26,8 @@ export class Evaluacion extends BaseEntity {
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  @ManyToOne((type) => Actividades, (actividades) => actividades.evaluaciones, {
-    eager: false,
-  })
-  @JoinColumn([{ name: 'actividad_Id', referencedColumnName: 'id' }])
-  @Column()
-  actividad_Id: number;
-
-  actividad: Promise< Actividades>;
+  @ManyToOne(() => Actividades, (actividades) => actividades.evaluaciones)
+  actividad: Actividades;
   @OneToMany(
     () => PreguntaHtml,
     preguntahtml => preguntahtml.evaluacion,

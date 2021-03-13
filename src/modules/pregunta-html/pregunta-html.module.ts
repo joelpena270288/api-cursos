@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PreguntaHtmlService } from './pregunta-html.service';
 import { PreguntaHtmlRepository } from "./pregunta_html.repository";
-import { EvaluacionRepository } from "../evaluacion/evalucion.repository";
+import { EvaluacionRepository } from "../evaluacion/evaluacion.repository";
 import { PreguntaHtmlController } from './pregunta-html.controller';
 
 @Module({
