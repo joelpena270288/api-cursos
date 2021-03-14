@@ -8,7 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Actividades } from '../actividad/actividad.entity';
+import { Actividad } from '../actividad/actividad.entity';
 
 @Entity('contenidos')
 export class Contenido extends BaseEntity {
@@ -23,6 +23,6 @@ export class Contenido extends BaseEntity {
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => Actividades, actividades => actividades.contenidos)
-   actividad: Actividades;
+  @ManyToOne(() => Actividad, actividades => actividades.contenidos)
+   actividad: Actividad;
 }

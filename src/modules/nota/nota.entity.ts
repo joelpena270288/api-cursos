@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 import { User } from '../user/user.entity';
-import { Actividades } from '../actividad/actividad.entity';
+import { Actividad } from '../actividad/actividad.entity';
 @Entity('notas')
 export class Nota extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
@@ -21,9 +21,9 @@ export class Nota extends BaseEntity {
 
   @ManyToOne(() => User, users => users.notas)
    user: User;
-  @OneToOne(() => Actividades)
+  @OneToOne(() => Actividad)
   @JoinColumn()
-  actividades:Actividades
+  actividades:Actividad
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

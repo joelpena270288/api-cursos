@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ActividadExtraclaseService } from './actividad-extraclase.service';
 import { ActividadExtraclaseRepository } from './actividadextraclase.repository';
-import { EvaluacionRepository } from '../evaluacion/evaluacion.repository';
+import { ActividadRepository } from '../actividad/actividad.repository';
 import { ActividadExtraclaseController } from './actividad-extraclase.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ActividadExtraclaseRepository,
-      EvaluacionRepository,
+      ActividadRepository,
     ]),
   ],
   exports: [TypeOrmModule],

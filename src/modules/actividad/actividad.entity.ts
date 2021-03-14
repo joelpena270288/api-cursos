@@ -12,10 +12,12 @@ import { Clase } from '../clase/clase.entity';
 import { Video } from '../video/video.entity';
 import { Documento } from '../documento/documento.entity';
 import { Contenido } from '../contenido/contenido.entity';
-import { Evaluacion } from '../evaluacion/evaluacion.entity';
+
+import { PreguntaHtml } from '../pregunta-html/preguntahtml.entity';
+import { ActividadesExtraclase } from '../actividad-extraclase/actividadextraclase.entity';
 
 @Entity('actividades')
-export class Actividades extends BaseEntity {
+export class Actividad extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
   @Column()
@@ -28,16 +30,22 @@ export class Actividades extends BaseEntity {
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  @ManyToOne(() => Clase, (clase) => clase.actividades)  
+  @ManyToOne(() => Clase, (clase) => clase.actividades)
   clase: Clase;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
   status: string;
-  @OneToMany(() => Video, video => video.actividad)
+  @OneToMany(() => Video, (video) => video.actividad)
   video: Video;
-  @OneToMany(() => Documento, documento => documento.actividad)
-  documentos:Documento[];
-  @OneToMany(() => Contenido, contenido => contenido.actividad)
+  @OneToMany(() => Documento, (documento) => documento.actividad)
+  documentos: Documento[];
+  @OneToMany(() => Contenido, (contenido) => contenido.actividad)
   contenidos: Contenido[];
-  @OneToMany(() => Evaluacion, evaluacion => evaluacion.actividad)
-  evaluaciones: Evaluacion[];
+
+  @OneToMany(() => PreguntaHtml, (preguntahtml) => preguntahtml.actividad)
+  preguntas_html: PreguntaHtml[];
+  @OneToMany(
+    () => ActividadesExtraclase,
+    (actividadextraclase) => actividadextraclase.actividad,
+  )
+  actividades_extraclases: PreguntaHtml[];
 }

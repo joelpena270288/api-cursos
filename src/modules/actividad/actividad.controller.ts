@@ -9,7 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ActividadService } from './actividad.service';
-import { Actividades } from './actividad.entity';
+import { Actividad } from './actividad.entity';
 
 @Controller('actividad')
 export class ActividadController {
@@ -17,21 +17,21 @@ export class ActividadController {
   @Get(':actividadid')
   getActividad(
     @Param('actividadid', ParseIntPipe) actividadid: number,
-  ): Promise<Actividades> {
+  ): Promise<Actividad> {
     return this._actividadService.get(actividadid);
   }
   @Get()
-  getAllActividad(): Promise<Actividades[]> {
+  getAllActividad(): Promise<Actividad[]> {
     return this._actividadService.getAll();
   }
   @Post()
-  createActividad(@Body() actividad: Actividades): Promise<Actividades> {
+  createActividad(@Body() actividad: Actividad): Promise<Actividad> {
     return this._actividadService.create(actividad);
   }
   @Patch(':actividadid')
   updateactividad(
     @Param('actividadid', ParseIntPipe) actividadid: number,
-    @Body() actividad: Actividades,
+    @Body() actividad: Actividad,
   ) {
     return this._actividadService.update(actividadid, actividad);
   }

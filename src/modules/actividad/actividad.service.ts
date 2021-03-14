@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { ActividadRepository } from './actividad.repository';
 import { ClaseRepository } from '../clase/clase.repository';
-import { Actividades } from './actividad.entity';
+import { Actividad } from './actividad.entity';
 import { status } from '../../shared/entity-status.enum';
 
 @Injectable()
@@ -17,17 +17,17 @@ export class ActividadService {
     @InjectRepository(ClaseRepository)
     private readonly _claseRepository: ClaseRepository,
   ) {}
-  async create(actividad: Actividades): Promise<Actividades> {
-    const savedActividad: Actividades = await this._actividadRepository.save(
+  async create(actividad: Actividad): Promise<Actividad> {
+    const savedActividad: Actividad = await this._actividadRepository.save(
       actividad,
     );
     return savedActividad;
   }
-  async get(actividadid: number): Promise<Actividades> {
+  async get(actividadid: number): Promise<Actividad> {
     if (!actividadid) {
       throw new BadRequestException('id must be sent');
     }
-    const actividad: Actividades = await this._actividadRepository.findOne(
+    const actividad: Actividad = await this._actividadRepository.findOne(
       actividadid,
       {
         where: { status: status.ACTIVE },
@@ -38,8 +38,8 @@ export class ActividadService {
     }
     return actividad;
   }
-  async getAll(): Promise<Actividades[]> {
-    const actividad: Actividades[] = await this._actividadRepository.find({
+  async getAll(): Promise<Actividad[]> {
+    const actividad: Actividad[] = await this._actividadRepository.find({
       where: { status: status.ACTIVE },
     });
     return actividad;
@@ -47,8 +47,8 @@ export class ActividadService {
 
   async update(
     actividadid: number,
-    actividad: Actividades,
-  ): Promise<Actividades> {
+    actividad: Actividad,
+  ): Promise<Actividad> {
     const foundactividad = await this._actividadRepository.findOne(
       actividadid,
       { where: { status: 'ACTIVE' } },
@@ -60,7 +60,7 @@ export class ActividadService {
     foundactividad.nota = actividad.nota;
     foundactividad.descripcion = actividad.descripcion;
 
-    const updatedactividad: Actividades = await this._actividadRepository.save(
+    const updatedactividad: Actividad = await this._actividadRepository.save(
       foundactividad,
     );
     return updatedactividad;
