@@ -23,6 +23,6 @@ export class Contenido extends BaseEntity {
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => Actividad, actividades => actividades.contenidos)
-   actividad: Actividad;
+  @ManyToOne(() => Actividad, (actividades) => actividades.contenidos)
+  actividad: Actividad;
 }

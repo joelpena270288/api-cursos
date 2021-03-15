@@ -45,10 +45,7 @@ export class ActividadService {
     return actividad;
   }
 
-  async update(
-    actividadid: number,
-    actividad: Actividad,
-  ): Promise<Actividad> {
+  async update(actividadid: number, actividad: Actividad): Promise<Actividad> {
     const foundactividad = await this._actividadRepository.findOne(
       actividadid,
       { where: { status: 'ACTIVE' } },
@@ -76,5 +73,12 @@ export class ActividadService {
       status: status.INACTIVE,
     });
     return true;
+  }
+  async getAllByIdClase(claseid: number): Promise<Actividad[]> {
+    const actividad: Actividad[] = await this._actividadRepository.find({
+      relations: ['video','actividades_extraclases','preguntas_html'],
+      where: { status: status.ACTIVE, clase: claseid },
+    });
+    return actividad;
   }
 }

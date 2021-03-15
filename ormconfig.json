@@ -7,6 +7,8 @@
     "database": "appcursos",
     "synchronize": true,
     "keepConnectionAlive": true,
+    
+    "cache": true,
     "entities": [
         "src/modules/**/*.entity.{ts,js}"
     ],

@@ -30,6 +30,7 @@ export class Actividad extends BaseEntity {
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
+  
   @ManyToOne(() => Clase, (clase) => clase.actividades)
   clase: Clase;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
@@ -43,9 +44,6 @@ export class Actividad extends BaseEntity {
 
   @OneToMany(() => PreguntaHtml, (preguntahtml) => preguntahtml.actividad)
   preguntas_html: PreguntaHtml[];
-  @OneToMany(
-    () => ActividadesExtraclase,
-    (actividadextraclase) => actividadextraclase.actividad,
-  )
+  @OneToMany(() => ActividadesExtraclase,(actividadextraclase) => actividadextraclase.actividad)
   actividades_extraclases: PreguntaHtml[];
 }

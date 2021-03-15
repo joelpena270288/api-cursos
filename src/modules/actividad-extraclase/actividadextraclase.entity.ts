@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { Actividad } from '../actividad/actividad.entity';
 
-@Entity('actividades_entraclases')
+@Entity('actividades_extraclases')
 export class ActividadesExtraclase extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -21,8 +21,7 @@ export class ActividadesExtraclase extends BaseEntity {
   orientacion: string;
   @Column()
   documentos: string;
-  @Column()
-  fecha_orientacion: Date;
+ 
   @Column()
   fecha_entrega: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

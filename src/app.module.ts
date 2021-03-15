@@ -14,7 +14,6 @@ import { ActividadModule } from './modules/actividad/actividad.module';
 import { VideoModule } from './modules/video/video.module';
 import { DocumentoModule } from './modules/documento/documento.module';
 import { ContenidoModule } from './modules/contenido/contenido.module';
-
 import { PreguntaHtmlModule } from './modules/pregunta-html/pregunta-html.module';
 import { ActividadExtraclaseModule } from './modules/actividad-extraclase/actividad-extraclase.module';
 import { NotaModule } from './modules/nota/nota.module';

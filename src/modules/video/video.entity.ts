@@ -18,6 +18,8 @@ export class Video extends BaseEntity {
   nombre: string;
   @Column()
   link: string;
+  @Column()
+  nivel: number;
   @ManyToOne(() => Actividad, (actividad) => actividad.video)
   actividad: Actividad;
 }
