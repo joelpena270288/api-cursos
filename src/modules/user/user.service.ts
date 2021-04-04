@@ -8,7 +8,7 @@ import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { RoleRepository } from '../role/role.repository';
 import { status } from '../../shared/entity-status.enum';
-import { ReadUserDto, UpdateUserDto } from './dto';
+import { ReadUserDto, UpdateUserDto, UserDto } from './dto';
 import { plainToClass } from 'class-transformer';
 @Injectable()
 export class UserService {
@@ -30,6 +30,7 @@ export class UserService {
     }
     return plainToClass(ReadUserDto, user);
   }
+  
   async getAll(): Promise<ReadUserDto[]> {
     const users: User[] = await this._userRepository.find({
       where: { status: status.ACTIVE },

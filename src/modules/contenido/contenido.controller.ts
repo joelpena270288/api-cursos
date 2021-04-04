@@ -18,7 +18,7 @@ export class ContenidoController {
     return this._contenidoService.create(contenido);
   }
   @Get('/byidactividad/:idactividad')
-  getAllModuloByIdCurso(
+  getAllModuloByIdClase(
     @Param('idactividad', ParseIntPipe) idactividad: number,
   ): Promise<Contenido[]> {
     return this._contenidoService.getAllByIdClase(idactividad);

@@ -21,9 +21,9 @@ export class ContenidoService {
     return savedContenido;
   }
   async getAllByIdClase(actividadid: number): Promise<Contenido[]> {
-    const video: Contenido[] = await this._contenidoRepository.find({
+    const contenido: Contenido[] = await this._contenidoRepository.find({
       where: { actividad: actividadid },
     });
-    return video;
+    return contenido;
   }
 }
