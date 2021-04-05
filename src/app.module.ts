@@ -1,3 +1,8 @@
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { CursosProgresoModule } from './modules/cursos-progreso/cursos-progreso.module';
+import { CursosProgresoController } from './modules/cursos-progreso/cursos-progreso.controller';
+import { CursosPasadosModule } from './modules/cursos-pasados/cursos-pasados.module';
+import { PlanEstudioModule } from './modules/plan-estudio/plan-estudio.module';
 import { Module } from '@nestjs/common';
 import { Configuration } from './config/config.keys';
 import { ConfigService } from './config/config.service';
@@ -19,35 +24,42 @@ import { ActividadExtraclaseModule } from './modules/actividad-extraclase/activi
 import { NotaModule } from './modules/nota/nota.module';
 
 
-@Module({ 
+@Module({
   imports: [
-     DatabaseModule, 
-     UserModule, 
-     CursoModule, 
-     ConfigModule, 
-     RoleModule,    
-     AuthModule,
-     EstadoCursoModule,
-      ModuloModule,
-      ClaseModule,
-      ActividadModule,
-       VideoModule,
-       DocumentoModule, 
-       ContenidoModule, 
-     
-       PreguntaHtmlModule, 
-       ActividadExtraclaseModule, 
-       NotaModule,    
-    
-   
-    ],
-  controllers: [],
+        DashboardModule, 
+    CursosProgresoModule,
+    CursosPasadosModule,
+    PlanEstudioModule,
+    PlanEstudioModule,
+    DatabaseModule,
+    UserModule,
+    CursoModule,
+    ConfigModule,
+    RoleModule,
+    AuthModule,
+    EstadoCursoModule,
+    ModuloModule,
+    ClaseModule,
+    ActividadModule,
+    VideoModule,
+    DocumentoModule,
+    ContenidoModule,
+
+    PreguntaHtmlModule,
+    ActividadExtraclaseModule,
+    NotaModule,
+
+
+  ],
+  controllers: [
+    CursosProgresoController,
+  ],
   providers: [],
 })
 export class AppModule {
   static port: number | string;
-  constructor(private readonly _configService: ConfigService){
+  constructor(private readonly _configService: ConfigService) {
     AppModule.port = this._configService.get(Configuration.PORT);
-    
+
   }
 }
