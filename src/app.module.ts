@@ -1,3 +1,4 @@
+import { PlanModule } from './modules/plan/plan.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { CursosProgresoModule } from './modules/cursos-progreso/cursos-progreso.module';
 import { CursosProgresoController } from './modules/cursos-progreso/cursos-progreso.controller';
@@ -9,10 +10,9 @@ import { ConfigService } from './config/config.service';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './modules/user/user.module';
 import { CursoModule } from './modules/curso/curso.module';
-import { ConfigModule } from './config/config.module';
-import { RoleModule } from './modules/role/role.module';
+import {  ConfigModule  } from './config/config.module';
+import {  RoleModule } from './modules/role/role.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { EstadoCursoModule } from './modules/estado-curso/estado-curso.module';
 import { ModuloModule } from './modules/modulo/modulo.module';
 import { ClaseModule } from './modules/clase/clase.module';
 import { ActividadModule } from './modules/actividad/actividad.module';
@@ -22,14 +22,11 @@ import { ContenidoModule } from './modules/contenido/contenido.module';
 import { PreguntaHtmlModule } from './modules/pregunta-html/pregunta-html.module';
 import { ActividadExtraclaseModule } from './modules/actividad-extraclase/actividad-extraclase.module';
 import { NotaModule } from './modules/nota/nota.module';
-
-
 @Module({
   imports: [
-        DashboardModule, 
+    PlanModule,
+    DashboardModule,
     CursosProgresoModule,
-    CursosPasadosModule,
-    PlanEstudioModule,
     PlanEstudioModule,
     DatabaseModule,
     UserModule,
@@ -37,7 +34,6 @@ import { NotaModule } from './modules/nota/nota.module';
     ConfigModule,
     RoleModule,
     AuthModule,
-    EstadoCursoModule,
     ModuloModule,
     ClaseModule,
     ActividadModule,
@@ -52,7 +48,7 @@ import { NotaModule } from './modules/nota/nota.module';
 
   ],
   controllers: [
-    CursosProgresoController,
+
   ],
   providers: [],
 })

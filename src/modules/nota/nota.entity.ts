@@ -11,19 +11,19 @@ import {
 
 import { User } from '../user/user.entity';
 import { Actividad } from '../actividad/actividad.entity';
+import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
 @Entity('notas')
 export class Nota extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
   @Column()
   nota: number;
-  ultima_actividad: number;
 
-  @ManyToOne(() => User, users => users.notas)
-   user: User;
   @OneToOne(() => Actividad)
   @JoinColumn()
-  actividades:Actividad
+  actividades: Actividad;
+  @ManyToOne(() => CursosProgreso, (cursosProgreso) => cursosProgreso.notas)
+  cursosProgreso: CursosProgreso;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

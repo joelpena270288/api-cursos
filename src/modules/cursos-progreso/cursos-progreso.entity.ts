@@ -10,16 +10,18 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Curso } from '../curso/curso.entity';
-import {PlanEstudio} from '../plan-estudio/plan-estudio.entity';
+import { Dashboard } from '../dashboard/dashboard.entity';
 import { Nota } from '../nota/nota.entity';
-@Entity('cursos-pasados')
-export class CursosPasados extends BaseEntity {
+import {PlanEstudio} from '../plan-estudio/plan-estudio.entity';
+@Entity('cursos-progreso')
+export class CursosProgreso extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
-  @ManyToOne(() => PlanEstudio, (planEstudio) => planEstudio.cursosPasados)
+  @ManyToOne(() => PlanEstudio, (planEstudio) => planEstudio.cursosProgreso)
   planEstudio: PlanEstudio;
+  @OneToMany(() => Nota, (nota) => nota.cursosProgreso)
+  notas: Nota[];
   @OneToOne(() => Curso)
   @JoinColumn()
   curso: Curso;
- 
 }
