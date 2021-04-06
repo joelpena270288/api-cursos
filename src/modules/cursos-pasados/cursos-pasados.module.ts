@@ -1,3 +1,4 @@
+import { CursosPasadosService } from './cursos-pasados.service';
 import { CursosPasadosController } from './cursos-pasados.controller';
 import { Module } from '@nestjs/common';
 
@@ -5,6 +6,7 @@ import { Module } from '@nestjs/common';
     imports: [],
     controllers: [
         CursosPasadosController,],
-    providers: [],
+    providers: [
+        CursosPasadosService,],
 })
 export class CursosPasadosModule { }

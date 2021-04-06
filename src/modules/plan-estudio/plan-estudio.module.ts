@@ -1,3 +1,4 @@
+import { PlanEstudioService } from './plan-estudio.service';
 import { PlanEstudioController } from './plan-estudio.controller';
 import { Module } from '@nestjs/common';
 
@@ -5,6 +6,7 @@ import { Module } from '@nestjs/common';
     imports: [],
     controllers: [
         PlanEstudioController,],
-    providers: [],
+    providers: [
+        PlanEstudioService, ],
 })
 export class PlanEstudioModule { }
