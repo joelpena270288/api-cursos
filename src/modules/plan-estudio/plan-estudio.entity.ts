@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { CursosPasados } from '../cursos-pasados/cursos-pasados.entity';
 import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
-import { Dashboard} from '../dashboard/dashboard.entity';
+import { Dashboard } from '../dashboard/dashboard.entity';
 import { User } from '../user/user.entity';
 @Entity('planes-estudio')
 export class PlanEstudio extends BaseEntity {
@@ -24,10 +24,8 @@ export class PlanEstudio extends BaseEntity {
     (cursosProgreso) => cursosProgreso.planEstudio,
   )
   cursosProgreso: CursosProgreso[];
-  @OneToOne(() => User)
-  @JoinColumn()
-  user: User;
-  @OneToOne(() => Dashboard)
+
+  @OneToOne(() => Dashboard, { eager: true })
   @JoinColumn()
   dasboard: Dashboard;
 }
