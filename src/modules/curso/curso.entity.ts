@@ -3,10 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Modulo } from '../modulo/modulo.entity';
+import { Dashboard } from '../dashboard/dashboard.entity';
 
 @Entity('cursos')
 export class Curso extends BaseEntity {
@@ -30,6 +32,8 @@ export class Curso extends BaseEntity {
   updatedAt: Date;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
   status: string;
-  @OneToMany(type => Modulo, modulo => modulo.curso)
+  @OneToMany((type) => Modulo, (modulo) => modulo.curso)
   modulos: Modulo[];
+  @ManyToOne(() => Dashboard, (dashboard) => dashboard.cursos)
+  dashboard: Dashboard;
 }
