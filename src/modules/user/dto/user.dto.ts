@@ -1,16 +1,15 @@
-import {IsNotEmpty} from 'class-validator';
-import { RoleType } from "../../role/roletype.enum";
+import { IsNotEmpty } from 'class-validator';
+import { RoleType } from '../../role/roletype.enum';
 import { UserDetails } from '../user.details.entity';
 
-export class UserDto{
-    @IsNotEmpty()
-    id: number;
-    @IsNotEmpty()
-    username: string;
-    @IsNotEmpty()
-    email: string;
-    roles: RoleType[];
-    @IsNotEmpty()
-    details: UserDetails;
-
+export class UserDto {
+  @IsNotEmpty()
+  id: number;
+  @IsNotEmpty()
+  username: string;
+  @IsNotEmpty()
+  email: string;
+  roles: RoleType[];
+  @IsNotEmpty()
+  details: UserDetails;
 }

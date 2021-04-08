@@ -12,6 +12,7 @@ import { ReadUserDto, UpdateUserDto, UserDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { DashboardRepository } from '../dashboard/dashboard.repository';
 import { Dashboard } from '../dashboard/dashboard.entity';
+import { UserDetails } from './user.details.entity';
 @Injectable()
 export class UserService {
   constructor(
@@ -52,17 +53,11 @@ export class UserService {
     founduser.username = user.username;
     founduser.email = user.email;
     const updateduser = await this._userRepository.save(founduser);
-    const dashboard = await this._dasboardRepository.findOne({
-      where: { user: user },
-    });
-    if (!dashboard) {
-      const dashboard = new Dashboard();
-      dashboard.user = founduser;
-      await this._dasboardRepository.save(dashboard);
-    }
-
+   
+   
     return plainToClass(ReadUserDto, updateduser);
   }
+
   async delete(userId: number): Promise<boolean> {
     const userExist = await this._userRepository.findOne(userId, {
       where: { status: 'ACTIVE' },
@@ -89,5 +84,29 @@ export class UserService {
     userExist.roles.push(roleExist);
     await this._userRepository.save(userExist);
     return true;
+  }
+  async adddetail(
+    userid: number,
+    userdetail: UserDetails,
+  ): Promise<ReadUserDto> {
+    const founduser = await this._userRepository.findOne(userid, {
+      where: { status: 'ACTIVE' },
+    });
+    if (!founduser) {
+      throw new NotFoundException('user not exist');
+    }
+    founduser.details = userdetail;
+   
+    const updateduser = await this._userRepository.save(founduser);
+    const dashboard = await this._dasboardRepository.findOne({
+      where: { user: founduser },
+    });
+    if (!dashboard) {
+      const dashboard = new Dashboard();
+      dashboard.user = founduser;
+      await this._dasboardRepository.save(dashboard);
+    }
+
+    return plainToClass(ReadUserDto, updateduser);
   }
 }
