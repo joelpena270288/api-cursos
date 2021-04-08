@@ -9,30 +9,29 @@ import { AuthController } from './auth.controller';
 import { AuthRepository } from './auth.repository';
 import { AuthService } from './auth.service';
 import { JwTStrategy } from './strategies/jwt.strategy';
+import { DashboardRepository } from '../dashboard/dashboard.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AuthRepository]),
-PassportModule.register({
-  defaultStrategy: 'jwt',
-
-}),
-JwtModule.registerAsync({
-  imports: [ConfigModule],
-  inject:[ConfigService],
-  useFactory(config: ConfigService){
-    return{
-      secret: config.get(Configuration.JWT_SECRET),
-      signOption:{
-        expiresIn:3600,
-      }
-
-    };
-  }
-})
+    TypeOrmModule.forFeature([AuthRepository, DashboardRepository]),
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory(config: ConfigService) {
+        return {
+          secret: config.get(Configuration.JWT_SECRET),
+          signOption: {
+            expiresIn: 3600,
+          },
+        };
+      },
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, ConfigService, JwTStrategy],
-  exports:[JwTStrategy, PassportModule]
+  exports: [JwTStrategy, PassportModule],
 })
 export class AuthModule {}

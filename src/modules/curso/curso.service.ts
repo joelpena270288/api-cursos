@@ -9,7 +9,7 @@ import { plainToClass } from 'class-transformer';
 import { CursoRepository } from './curso.repository';
 import { Curso } from './curso.entity';
 import { ReadCursoDto } from './dto/read-curso.dto';
-import {User} from '../user/user.entity';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class CursoService {
@@ -17,7 +17,7 @@ export class CursoService {
     @InjectRepository(CursoRepository)
     private readonly _cursoRepository: CursoRepository,
   ) {}
-  async create(curso: Curso): Promise<Curso> {
+  async create(curso: Curso, user: User): Promise<Curso> {
     const savedCurso: Curso = await this._cursoRepository.save(curso);
     return curso;
   }

@@ -28,8 +28,8 @@ export class CursoController {
     return this._cursoService.getAll();
   }
   @Post()
-  createCurso(@Body() curso: Curso): Promise<Curso> {
-    return this._cursoService.create(curso);
+  createCurso(@Body() curso: Curso, @GetUser() user: User): Promise<Curso> {
+    return this._cursoService.create(curso, user);
   }
   @Patch(':cursoid')
   updateRole(

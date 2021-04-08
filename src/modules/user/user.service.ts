@@ -10,6 +10,8 @@ import { RoleRepository } from '../role/role.repository';
 import { status } from '../../shared/entity-status.enum';
 import { ReadUserDto, UpdateUserDto, UserDto } from './dto';
 import { plainToClass } from 'class-transformer';
+import { DashboardRepository } from '../dashboard/dashboard.repository';
+import { Dashboard } from '../dashboard/dashboard.entity';
 @Injectable()
 export class UserService {
   constructor(
@@ -17,6 +19,8 @@ export class UserService {
     private readonly _userRepository: UserRepository,
     @InjectRepository(RoleRepository)
     private readonly _roleRepository: RoleRepository,
+    @InjectRepository(DashboardRepository)
+    private readonly _dasboardRepository: DashboardRepository,
   ) {}
   async get(id: number): Promise<ReadUserDto> {
     if (!id) {
@@ -30,7 +34,6 @@ export class UserService {
     }
     return plainToClass(ReadUserDto, user);
   }
-  
   async getAll(): Promise<ReadUserDto[]> {
     const users: User[] = await this._userRepository.find({
       where: { status: status.ACTIVE },
@@ -49,6 +52,15 @@ export class UserService {
     founduser.username = user.username;
     founduser.email = user.email;
     const updateduser = await this._userRepository.save(founduser);
+    const dashboard = await this._dasboardRepository.findOne({
+      where: { user: user },
+    });
+    if (!dashboard) {
+      const dashboard = new Dashboard();
+      dashboard.user = founduser;
+      await this._dasboardRepository.save(dashboard);
+    }
+
     return plainToClass(ReadUserDto, updateduser);
   }
   async delete(userId: number): Promise<boolean> {
