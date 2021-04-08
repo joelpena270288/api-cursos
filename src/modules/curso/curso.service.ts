@@ -9,6 +9,7 @@ import { plainToClass } from 'class-transformer';
 import { CursoRepository } from './curso.repository';
 import { Curso } from './curso.entity';
 import { ReadCursoDto } from './dto/read-curso.dto';
+import {User} from '../user/user.entity';
 
 @Injectable()
 export class CursoService {
@@ -61,5 +62,17 @@ export class CursoService {
     }
     await this._cursoRepository.update(cursoId, { status: status.INACTIVE });
     return true;
+  }
+  async getAllByUser(user: User): Promise<Curso[]> {
+    if (!user) {
+      throw new BadRequestException('user must be sent');
+    }
+    const cursos: Curso[] = await this._cursoRepository.find({
+      where: { status: status.ACTIVE, user: user },
+    });
+    if (!cursos) {
+      throw new NotFoundException('this course does not found');
+    }
+    return cursos;
   }
 }
