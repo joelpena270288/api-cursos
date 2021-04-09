@@ -6,10 +6,19 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { AuthModule } from '../auth/auth.module';
 import { RoleRepository } from '../role/role.repository';
-import {NotaRepository} from '../nota/nota.repository';
+import { DashboardRepository } from '../dashboard/dashboard.repository';
+
 @Module({
-imports: [TypeOrmModule.forFeature([UserRepository,RoleRepository,NotaRepository]),AuthModule],
-exports: [TypeOrmModule], 
-providers: [UserService], controllers: [UserController],
+  imports: [
+    TypeOrmModule.forFeature([
+      UserRepository,
+      RoleRepository,
+      DashboardRepository,
+    ]),
+    AuthModule,
+  ],
+  exports: [TypeOrmModule],
+  providers: [UserService],
+  controllers: [UserController],
 })
 export class UserModule {}
