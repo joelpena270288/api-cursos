@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../role/decorators/role.decorator';
@@ -16,13 +17,18 @@ import { RoleType } from '../role/roletype.enum';
 import { ReadUserDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
 import { UserDetails } from './user.details.entity';
+import { GetUser } from '../auth/user.decorator';
+import { User } from './user.entity';
+import { Request } from 'express';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
-  @Get(':userId')
-  getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
-    return this._userService.get(userId);
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.GENERAL, RoleType.DOCENTE)
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Get('/mi')
+  getUser( @GetUser() user: User): Promise<ReadUserDto> {
+    return this._userService.get(user.id);
   }
 
   @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.GENERAL)
@@ -39,13 +45,11 @@ export class UserController {
   ) {
     return this._userService.update(userId, user);
   }
-
-  @Patch('adddetail/:userId')
-  updatedetailsUser(
-    @Param('id', ParseIntPipe) userId: number,
-    @Body() detail: UserDetails,
-  ) {
-    return this._userService.adddetail(userId, detail);
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.GENERAL, RoleType.DOCENTE)
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Post('/adddetail')
+  updatedetailsUser(@Body() detail: UserDetails, @GetUser() user: User) {
+    return this._userService.adddetail(user, detail);
   }
 
   @Delete(':userId')
@@ -58,5 +62,9 @@ export class UserController {
     @Param('roleId', ParseIntPipe) roleId: number,
   ): Promise<boolean> {
     return this._userService.setRoleToUser(userId, roleId);
+  }
+  @Post('/upload/photo/byuser')
+  guardarFoto(@Req() req: Request) {
+    this._userService.GuardarFoto(req);
   }
 }

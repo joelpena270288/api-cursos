@@ -10,14 +10,24 @@ import { CursoRepository } from './curso.repository';
 import { Curso } from './curso.entity';
 import { ReadCursoDto } from './dto/read-curso.dto';
 import { User } from '../user/user.entity';
+import { DashboardRepository } from '../dashboard/dashboard.repository';
 
 @Injectable()
 export class CursoService {
   constructor(
     @InjectRepository(CursoRepository)
     private readonly _cursoRepository: CursoRepository,
+    @InjectRepository(DashboardRepository)
+    private readonly _dashboarRepository: DashboardRepository,
   ) {}
   async create(curso: Curso, user: User): Promise<Curso> {
+    const dashboardfound = await this._dashboarRepository.findOne({
+      where: { user: user },
+    });
+    if (!dashboardfound) {
+      throw new BadRequestException('Complet your Perfil');
+    }
+    curso.dashboard = dashboardfound;
     const savedCurso: Curso = await this._cursoRepository.save(curso);
     return curso;
   }

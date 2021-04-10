@@ -30,7 +30,7 @@ export class Curso extends BaseEntity {
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
+  @Column({ type: 'varchar', default: 'NOT ACTIVE', length: 12 })
   status: string;
   @OneToMany((type) => Modulo, (modulo) => modulo.curso)
   modulos: Modulo[];

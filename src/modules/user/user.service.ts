@@ -13,6 +13,7 @@ import { plainToClass } from 'class-transformer';
 import { DashboardRepository } from '../dashboard/dashboard.repository';
 import { Dashboard } from '../dashboard/dashboard.entity';
 import { UserDetails } from './user.details.entity';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -53,8 +54,7 @@ export class UserService {
     founduser.username = user.username;
     founduser.email = user.email;
     const updateduser = await this._userRepository.save(founduser);
-   
-   
+
     return plainToClass(ReadUserDto, updateduser);
   }
 
@@ -85,18 +85,15 @@ export class UserService {
     await this._userRepository.save(userExist);
     return true;
   }
-  async adddetail(
-    userid: number,
-    userdetail: UserDetails,
-  ): Promise<ReadUserDto> {
-    const founduser = await this._userRepository.findOne(userid, {
+  async adddetail(user: User, userdetail: UserDetails): Promise<ReadUserDto> {
+    const founduser = await this._userRepository.findOne(user.id, {
       where: { status: 'ACTIVE' },
     });
     if (!founduser) {
       throw new NotFoundException('user not exist');
     }
     founduser.details = userdetail;
-   
+
     const updateduser = await this._userRepository.save(founduser);
     const dashboard = await this._dasboardRepository.findOne({
       where: { user: founduser },
@@ -108,5 +105,23 @@ export class UserService {
     }
 
     return plainToClass(ReadUserDto, updateduser);
+  }
+  async GuardarFoto(req) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    let salida;
+    const formidable = require('formidable');
+    const form = new formidable.IncomingForm();
+    try {
+      form.parse(req, (fields, files) => {
+        console.log('\n-----------');
+        console.log('Fields', fields);
+        console.log('Received:', Object.keys(files));
+        console.log();
+       
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(salida);
   }
 }

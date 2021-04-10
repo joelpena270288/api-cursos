@@ -18,7 +18,7 @@ export class UserDetails extends BaseEntity {
   lastname: string;
   @Column({ type: 'varchar', nullable: true })
   sex: string;
-  @Column({  nullable: true })
+  @Column({ nullable: true })
   age: number;
   @Column({ type: 'varchar', nullable: true })
   photo: string;
@@ -26,7 +26,6 @@ export class UserDetails extends BaseEntity {
   education: string;
   @Column({ type: 'varchar', nullable: true })
   intereses: string;
-
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: true })
   createdAt: Date;
