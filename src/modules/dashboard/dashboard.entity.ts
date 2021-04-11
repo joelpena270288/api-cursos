@@ -22,5 +22,5 @@ export class Dashboard extends BaseEntity {
   user: User;
   @OneToMany(() => Curso, (curso) => curso.dashboard)
   cursos: Curso[];
-  new_dashboard: import('d:/Usuarios/Joel/Trabajos mios/cursos-api/src/modules/user/dto/update-user.dto').UpdateUserDto;
+  
 }

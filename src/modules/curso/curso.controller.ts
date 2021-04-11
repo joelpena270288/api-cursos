@@ -21,12 +21,11 @@ import { Roles } from '../role/decorators/role.decorator';
 @Controller('curso')
 export class CursoController {
   constructor(private readonly _cursoService: CursoService) {}
-
-  @Get(':cursoid')
-  getCurso(
-    @Param('cursoid', ParseIntPipe) cursoid: number,
-  ): Promise<ReadCursoDto> {
-    return this._cursoService.get(cursoid);
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.GENERAL, RoleType.DOCENTE)
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Get('/byuser')
+  getCurso(@GetUser() user: User): Promise<ReadCursoDto[]> {
+    return this._cursoService.get(user.id);
   }
   @Get()
   getAllCurso(): Promise<ReadCursoDto[]> {

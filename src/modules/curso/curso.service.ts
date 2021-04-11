@@ -31,17 +31,23 @@ export class CursoService {
     const savedCurso: Curso = await this._cursoRepository.save(curso);
     return curso;
   }
-  async get(id: number): Promise<ReadCursoDto> {
+  async get(id: number): Promise<ReadCursoDto[]> {
     if (!id) {
       throw new BadRequestException('id must be sent');
     }
-    const curso: Curso = await this._cursoRepository.findOne(id, {
-      where: { status: status.ACTIVE },
+
+    const dashboardfound = await this._dashboarRepository.findOne({
+      where: { user: id },
     });
-    if (!curso) {
-      throw new NotFoundException('this course does not found');
+
+    const cursos: Curso[] = await this._cursoRepository.find({
+      where: { status: status.ACTIVE, dashboard: dashboardfound },
+    });
+    if (cursos.length == 0) {
+      throw new NotFoundException('You dont have any course');
     }
-    return plainToClass(ReadCursoDto, curso);
+
+    return cursos.map((curso: Curso) => plainToClass(ReadCursoDto, curso));
   }
   async getAll(): Promise<ReadCursoDto[]> {
     const curso: Curso[] = await this._cursoRepository.find({
