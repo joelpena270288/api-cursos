@@ -20,9 +20,8 @@ export class CursosPasados extends BaseEntity {
   id: number;
   @ManyToOne(() => PlanEstudio, (planEstudio) => planEstudio.cursosPasados)
   planEstudio: PlanEstudio;
-  @ManyToMany(() => Curso, { eager: true })
-  @JoinTable()
-  curso: Curso[];
   @ManyToMany(() => Nota, { eager: true })
   notas: Nota[];
+  @ManyToOne(() => Curso, (curso) => curso.cursospasados)
+  curso: Curso;
 }

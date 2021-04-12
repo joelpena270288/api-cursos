@@ -32,9 +32,7 @@ export class CursosProgresoController {
   @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.DOCENTE)
   @UseGuards(AuthGuard(), RoleGuard)
   @Get('/all')
-  getAllCursosProgresosByUser(
-    @GetUser() user: User,
-  ): Promise<CursosProgreso[]> {
+  getAllCursosProgresosByUser(@GetUser() user: User): Promise<any> {
     return this._cursoProgresoService.getCursoProgresoByUser(user);
   }
 }

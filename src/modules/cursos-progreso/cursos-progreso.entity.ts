@@ -23,7 +23,7 @@ export class CursosProgreso extends BaseEntity {
   planEstudio: PlanEstudio;
   @ManyToMany(() => Nota, { eager: true })
   notas: Nota[];
-  @ManyToMany(() => Curso, { eager: true })
-  @JoinTable()
-  curso: Curso[];
+  @ManyToOne(() => Curso, (curso) => curso.cursosprogreso)
+  curso: Curso;
+ 
 }

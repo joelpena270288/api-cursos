@@ -1,7 +1,7 @@
 import { CursosProgresoService } from './cursos-progreso.service';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CursosProgresoRepository } from './cursos-pasados.repository';
+import { CursosProgresoRepository } from './cursos-progreso.repository';
 import { AuthModule } from '../auth/auth.module';
 import { CursoRepository } from '../curso/curso.repository';
 import { DashboardRepository } from '../dashboard/dashboard.repository';

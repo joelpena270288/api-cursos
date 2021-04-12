@@ -27,5 +27,5 @@ export class PlanEstudio extends BaseEntity {
 
   @OneToOne(() => Dashboard, { eager: true })
   @JoinColumn()
-  dasboard: Dashboard;
+  dashboard: Dashboard;
 }

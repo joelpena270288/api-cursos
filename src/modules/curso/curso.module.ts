@@ -7,13 +7,16 @@ import { ModuloRepository } from '../modulo/modulo.repository';
 import { CursoController } from './curso.controller';
 import { DashboardRepository } from '../dashboard/dashboard.repository';
 import { AuthModule } from '../auth/auth.module';
-
+import {CursosProgresoRepository} from '../cursos-progreso/cursos-progreso.repository';
+import {CursosPasadosRepository} from '../cursos-pasados/cursos-pasados.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CursoRepository,
       ModuloRepository,
       DashboardRepository,
+      CursosProgresoRepository,
+      CursosPasadosRepository,
     ]),
     AuthModule,
   ],

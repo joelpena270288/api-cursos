@@ -3,12 +3,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Modulo } from '../modulo/modulo.entity';
 import { Dashboard } from '../dashboard/dashboard.entity';
+import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
+import { CursosPasados } from '../cursos-pasados/cursos-pasados.entity';
 
 @Entity('cursos')
 export class Curso extends BaseEntity {
@@ -38,4 +42,10 @@ export class Curso extends BaseEntity {
   modulos: Modulo[];
   @ManyToOne(() => Dashboard, (dashboard) => dashboard.cursos)
   dashboard: Dashboard;
+  @OneToMany(() => CursosProgreso, (cursoprogreso) => cursoprogreso.curso)
+  @JoinTable()
+  cursosprogreso: CursosProgreso[];
+  @OneToMany(() => CursosPasados, (cursopasado) => cursopasado.curso)
+  @JoinTable()
+  cursospasados: CursosPasados[];
 }
