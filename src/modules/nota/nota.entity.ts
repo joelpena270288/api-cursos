@@ -22,8 +22,7 @@ export class Nota extends BaseEntity {
   @OneToOne(() => Actividad)
   @JoinColumn()
   actividades: Actividad;
-  @ManyToOne(() => CursosProgreso, (cursosProgreso) => cursosProgreso.notas)
-  cursosProgreso: CursosProgreso;
+ 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

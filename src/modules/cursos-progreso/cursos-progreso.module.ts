@@ -6,6 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { CursoRepository } from '../curso/curso.repository';
 import { DashboardRepository } from '../dashboard/dashboard.repository';
 import { PlanEstudioRepository } from '../plan-estudio/plan-estudio.repository';
+import { CursosProgresoController } from './cursos-progreso.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { PlanEstudioRepository } from '../plan-estudio/plan-estudio.repository';
     ]),
     AuthModule,
   ],
-  controllers: [],
+  controllers: [CursosProgresoController],
   providers: [CursosProgresoService],
 })
 export class CursosProgresoModule {}

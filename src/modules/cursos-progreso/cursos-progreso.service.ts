@@ -8,6 +8,7 @@ import { PlanEstudio } from '../plan-estudio/plan-estudio.entity';
 import { PlanEstudioRepository } from '../plan-estudio/plan-estudio.repository';
 import { Curso } from '../curso/curso.entity';
 import { CursoRepository } from '../curso/curso.repository';
+import { status } from '../../shared/entity-status.enum';
 
 @Injectable()
 export class CursosProgresoService {
@@ -26,7 +27,9 @@ export class CursosProgresoService {
     const dashboardfound = await this._dashboarRepository.findOne({
       where: { user: user },
     });
-    const cursofound = await this._cursoRepository.findOne(id);
+    const cursofound = await this._cursoRepository.findOne(id, {
+      where: { status: status.ACTIVE },
+    });
     if (!cursofound) {
       throw new BadRequestException('Course Not Found');
     }
@@ -41,8 +44,15 @@ export class CursosProgresoService {
     if (planestudio) {
       const cursosprogress = new CursosProgreso();
       cursosprogress.planEstudio = planestudio;
-      cursosprogress.curso = cursofound;
-      const result = await this._cursoProgresoRepository.save(cursosprogress);
+      cursosprogress.curso = [cursofound];
+      let  result;
+      try{
+        result = await this._cursoProgresoRepository.save(cursosprogress);
+      }
+      catch(e){
+        console.log(e);
+      }
+     
       return result;
     }
     planestudio = new PlanEstudio();
@@ -50,8 +60,24 @@ export class CursosProgresoService {
     await this._planEstudioRepository.save(planestudio);
     const cursosprogress = new CursosProgreso();
     cursosprogress.planEstudio = planestudio;
-    cursosprogress.curso = cursofound;
+    cursosprogress.curso = [cursofound];
     const result = await this._cursoProgresoRepository.save(cursosprogress);
     return result;
+  }
+  async getCursoProgresoByUser(user: User): Promise<CursosProgreso[]> {
+    const dashboardfound = await this._dashboarRepository.findOne({
+      where: { user: user },
+    });
+    if (!dashboardfound) {
+      throw new BadRequestException('Complet your Perfil');
+    }
+    const planestudio: PlanEstudio = await this._planEstudioRepository.findOne({
+      relations: ['cursosProgreso'],
+      where: { dasboard: dashboardfound },
+    });
+    if (!planestudio) {
+      throw new BadRequestException('You dot have any course');
+    }
+    return planestudio.cursosProgreso;
   }
 }
