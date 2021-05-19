@@ -14,8 +14,8 @@ import { Actividad } from '../actividad/actividad.entity';
 import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
 @Entity('notas')
 export class Nota extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   nota: number;
 

@@ -7,6 +7,13 @@ import { CursoRepository } from '../curso/curso.repository';
 import { DashboardRepository } from '../dashboard/dashboard.repository';
 import { PlanEstudioRepository } from '../plan-estudio/plan-estudio.repository';
 import { CursosProgresoController } from './cursos-progreso.controller';
+import { UltimaClaseRepository } from '../ultima-clase/ultima-clase.repository';
+import { PreguntaHtmlRepository } from '../pregunta-html/pregunta_html.repository';
+import { ClasePasadaRepository } from '../clases-pasadas/clase-pasada.repository';
+import { ClaseRepository } from '../clase/clase.repository';
+import { ModulosPasadosRepository } from '../modulos-pasados/modulos-pasados.repository';
+import { ModuloActualRepository } from '../modulo-actual/modulo-actual.repository';
+
 
 @Module({
   imports: [
@@ -15,6 +22,12 @@ import { CursosProgresoController } from './cursos-progreso.controller';
       DashboardRepository,
       CursosProgresoRepository,
       PlanEstudioRepository,
+      UltimaClaseRepository,
+      PreguntaHtmlRepository,
+      ClasePasadaRepository,
+      ClaseRepository,
+      ModulosPasadosRepository,
+      ModuloActualRepository,
     ]),
     AuthModule,
   ],

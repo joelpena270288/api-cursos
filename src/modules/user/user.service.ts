@@ -24,7 +24,7 @@ export class UserService {
     @InjectRepository(DashboardRepository)
     private readonly _dasboardRepository: DashboardRepository,
   ) {}
-  async get(id: number): Promise<ReadUserDto> {
+  async get(id: string): Promise<ReadUserDto> {
     if (!id) {
       throw new BadRequestException('id must be sent');
     }
@@ -44,7 +44,7 @@ export class UserService {
     return users.map((user: User) => plainToClass(ReadUserDto, user));
   }
 
-  async update(userid: number, user: UpdateUserDto): Promise<ReadUserDto> {
+  async update(userid: string, user: UpdateUserDto): Promise<ReadUserDto> {
     const founduser = await this._userRepository.findOne(userid, {
       where: { status: 'ACTIVE' },
     });
@@ -58,7 +58,7 @@ export class UserService {
     return plainToClass(ReadUserDto, updateduser);
   }
 
-  async delete(userId: number): Promise<boolean> {
+  async delete(userId: string): Promise<boolean> {
     const userExist = await this._userRepository.findOne(userId, {
       where: { status: 'ACTIVE' },
     });
@@ -68,7 +68,7 @@ export class UserService {
     await this._userRepository.update(userId, { status: status.INACTIVE });
     return true;
   }
-  async setRoleToUser(userId: number, roleId: number): Promise<boolean> {
+  async setRoleToUser(userId: string, roleId: string): Promise<boolean> {
     const userExist = await this._userRepository.findOne(userId, {
       where: { status: status.ACTIVE },
     });
@@ -92,7 +92,27 @@ export class UserService {
     if (!founduser) {
       throw new NotFoundException('user not exist');
     }
-    founduser.details = userdetail;
+    if (userdetail.name !== '') {
+      founduser.details.name = userdetail.name;
+    }
+    if (userdetail.lastname !== '') {
+      founduser.details.lastname = userdetail.lastname;
+    }
+    if (userdetail.sex !== '') {
+      founduser.details.sex = userdetail.sex;
+    }
+    if (userdetail.age !== 0) {
+      founduser.details.age = userdetail.age;
+    }
+    if (userdetail.photo !== '') {
+      founduser.details.photo = userdetail.photo;
+    }
+    if (userdetail.education !== '') {
+      founduser.details.education = userdetail.education;
+    }
+    if (userdetail.intereses !== '') {
+      founduser.details.intereses = userdetail.intereses;
+    }
 
     const updateduser = await this._userRepository.save(founduser);
     const dashboard = await this._dasboardRepository.findOne({
@@ -105,23 +125,5 @@ export class UserService {
     }
 
     return plainToClass(ReadUserDto, updateduser);
-  }
-  async GuardarFoto(req) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    let salida;
-    const formidable = require('formidable');
-    const form = new formidable.IncomingForm();
-    try {
-      form.parse(req, (fields, files) => {
-        console.log('\n-----------');
-        console.log('Fields', fields);
-        console.log('Received:', Object.keys(files));
-        console.log();
-       
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(salida);
   }
 }

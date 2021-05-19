@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -16,7 +17,7 @@ import { RoleService } from './role.service';
 export class RoleController {
   constructor(private readonly _roleService: RoleService) {}
   @Get(':roleid')
-  getRole(@Param('roleid', ParseIntPipe) id: number): Promise<ReadRoleDto> {
+  getRole(@Param('roleid', ParseUUIDPipe) id: string): Promise<ReadRoleDto> {
     return this._roleService.get(id);
   }
   @Get()
@@ -29,13 +30,13 @@ export class RoleController {
   }
   @Patch(':roleid')
   updateRole(
-    @Param('roleid', ParseIntPipe) roleid: number,
+    @Param('roleid', ParseUUIDPipe) roleid: string,
     @Body() role: Partial<UpdateRoleDto>,
   ) {
     return this._roleService.update(roleid, role);
   }
   @Delete(':roleid')
-  deleteRole(@Param('roleid', ParseIntPipe) id: number) {
+  deleteRole(@Param('roleid', ParseUUIDPipe) id: string) {
     return this._roleService.delete(id);
   }
 }

@@ -13,15 +13,15 @@ import { Actividad } from '../actividad/actividad.entity';
 
 @Entity('actividades_extraclases')
 export class ActividadesExtraclase extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   punto: number;
   @Column()
   orientacion: string;
   @Column()
   documentos: string;
- 
+
   @Column()
   fecha_entrega: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
@@ -31,8 +31,10 @@ export class ActividadesExtraclase extends BaseEntity {
   @ManyToOne(
     () => Actividad,
     (actividades) => actividades.actividades_extraclases,
-   
+    {
+      cascade: true,
+      onDelete: 'CASCADE',
+    },
   )
- 
   actividad: Actividad;
 }

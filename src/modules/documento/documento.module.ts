@@ -4,9 +4,10 @@ import { DocumentoService } from './documento.service';
 import { DocumentoRepository } from "./documento.repository";
 import { ActividadRepository } from "../actividad/actividad.repository";
 import { DocumentoController } from './documento.controller';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DocumentoRepository,ActividadRepository])],
+  imports: [TypeOrmModule.forFeature([DocumentoRepository,ActividadRepository]), AuthModule,],
   exports: [TypeOrmModule], 
   providers: [DocumentoService], controllers: [DocumentoController]
 })

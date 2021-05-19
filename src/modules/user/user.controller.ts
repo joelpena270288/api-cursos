@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  ParseUUIDPipe,
   Req,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -40,7 +41,7 @@ export class UserController {
 
   @Patch(':userId')
   updateUser(
-    @Param('id', ParseIntPipe) userId: number,
+    @Param('id', ParseUUIDPipe) userId: string,
     @Body() user: UpdateUserDto,
   ) {
     return this._userService.update(userId, user);
@@ -53,18 +54,15 @@ export class UserController {
   }
 
   @Delete(':userId')
-  deleteUser(@Param('userId', ParseIntPipe) userId: number): Promise<boolean> {
+  deleteUser(@Param('userId', ParseUUIDPipe) userId: string): Promise<boolean> {
     return this._userService.delete(userId);
   }
   @Post('/:userId/:roleId')
   setRoleToUser(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Param('roleId', ParseIntPipe) roleId: number,
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Param('roleId', ParseUUIDPipe) roleId: string,
   ): Promise<boolean> {
     return this._userService.setRoleToUser(userId, roleId);
   }
-  @Post('/upload/photo/byuser')
-  guardarFoto(@Req() req: Request) {
-    this._userService.GuardarFoto(req);
-  }
+ 
 }

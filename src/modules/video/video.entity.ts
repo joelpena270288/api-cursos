@@ -12,14 +12,21 @@ import { Actividad } from '../actividad/actividad.entity';
 
 @Entity('videos')
 export class Video extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   nombre: string;
   @Column()
   link: string;
-  @Column()
-  nivel: number;
-  @ManyToOne(() => Actividad, (actividad) => actividad.video)
+
+  @ManyToOne(() => Actividad, (actividad) => actividad.videos, {
+    cascade: true,
+    onDelete: 'CASCADE'
+    
+  })
   actividad: Actividad;
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
+  @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
 }

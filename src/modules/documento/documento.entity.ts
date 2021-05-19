@@ -12,8 +12,8 @@ import { Actividad } from '../actividad/actividad.entity';
 
 @Entity('documentos')
 export class Documento extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   nombre: string;
   @Column()
@@ -23,6 +23,10 @@ export class Documento extends BaseEntity {
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  @ManyToOne(() => Actividad, actividades => actividades.documentos)
+  @ManyToOne(() => Actividad, actividades => actividades.documentos, {
+    cascade: true,
+    onDelete: 'CASCADE'
+    
+  })
   actividad: Actividad;
 }

@@ -16,8 +16,8 @@ import { CursosPasados } from '../cursos-pasados/cursos-pasados.entity';
 
 @Entity('cursos')
 export class Curso extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   nombre: string;
   @Column()

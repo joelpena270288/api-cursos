@@ -13,8 +13,8 @@ import { Actividad } from '../actividad/actividad.entity';
 
 @Entity('preguntas_html')
 export class PreguntaHtml extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   punto: number;
   @Column()
@@ -26,6 +26,10 @@ export class PreguntaHtml extends BaseEntity {
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => Actividad, (actividades) => actividades.preguntas_html)
+  @ManyToOne(() => Actividad, (actividades) => actividades.preguntas_html, {
+    cascade: true,
+    onDelete: 'CASCADE'
+    
+  })
   actividad: Actividad;
 }

@@ -15,8 +15,8 @@ import { Dashboard } from '../dashboard/dashboard.entity';
 import { User } from '../user/user.entity';
 @Entity('planes-estudio')
 export class PlanEstudio extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @OneToMany(() => CursosPasados, (cursosPasados) => cursosPasados.planEstudio)
   cursosPasados: CursosPasados[];
   @OneToMany(

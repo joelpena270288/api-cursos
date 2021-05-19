@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { CursoService } from './curso.service';
 import { Curso } from './curso.entity';
@@ -39,17 +40,28 @@ export class CursoController {
   }
   @Patch(':cursoid')
   updateRole(
-    @Param('cursoid', ParseIntPipe) cursoid: number,
+    @Param('cursoid', ParseUUIDPipe) cursoid: string,
     @Body() role: Curso,
   ) {
     return this._cursoService.update(cursoid, role);
   }
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR)
+  @UseGuards(AuthGuard(), RoleGuard)
   @Delete(':cursoid')
-  deleteRole(@Param('cursoid', ParseIntPipe) cursoid: number) {
-    return this._cursoService.delete(cursoid);
+  deleteCurso(
+    @Param('cursoid', ParseUUIDPipe) cursoid: string,
+    @GetUser() user: User,
+  ) {
+    return this._cursoService.delete(cursoid, user);
   }
   @Get('/getcurso/byuser')
   getCursosByUser(@GetUser() user: User): Promise<Curso[]> {
     return this._cursoService.getAllByUser(user);
+  }
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR)
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Post('/cambiarestado')
+  disponibleCurso(@Body() curso: Curso, @GetUser() user: User): Promise<Curso> {
+    return this._cursoService.cambiarEstado(user, curso.id, curso.disponible);
   }
 }

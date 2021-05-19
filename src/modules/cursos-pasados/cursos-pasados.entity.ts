@@ -16,8 +16,8 @@ import { PlanEstudio } from '../plan-estudio/plan-estudio.entity';
 import { Nota } from '../nota/nota.entity';
 @Entity('cursos-pasados')
 export class CursosPasados extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @ManyToOne(() => PlanEstudio, (planEstudio) => planEstudio.cursosPasados)
   planEstudio: PlanEstudio;
   @ManyToMany(() => Nota, { eager: true })

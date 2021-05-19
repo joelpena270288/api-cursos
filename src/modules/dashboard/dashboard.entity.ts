@@ -15,8 +15,8 @@ import { User } from '../user/user.entity';
 import { Curso } from '../curso/curso.entity';
 @Entity('dashboard')
 export class Dashboard extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @OneToOne(() => User)
   @JoinColumn()
   user: User;

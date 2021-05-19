@@ -31,7 +31,7 @@ export class CursoService {
     const savedCurso: Curso = await this._cursoRepository.save(curso);
     return curso;
   }
-  async get(id: number): Promise<ReadCursoDto[]> {
+  async get(id: string): Promise<ReadCursoDto[]> {
     if (!id) {
       throw new BadRequestException('id must be sent');
     }
@@ -51,12 +51,12 @@ export class CursoService {
   }
   async getAll(): Promise<ReadCursoDto[]> {
     const curso: Curso[] = await this._cursoRepository.find({
-      where: { status: status.ACTIVE },
+      where: { status: status.ACTIVE, disponible: true },
     });
     return curso.map((curso: Curso) => plainToClass(ReadCursoDto, curso));
   }
 
-  async update(cursoid: number, curso: Curso): Promise<Curso> {
+  async update(cursoid: string, curso: Curso): Promise<Curso> {
     const foundcurso = await this._cursoRepository.findOne(cursoid, {
       where: { status: 'ACTIVE' },
     });
@@ -69,14 +69,19 @@ export class CursoService {
     const updatecurso = await this._cursoRepository.save(foundcurso);
     return updatecurso;
   }
-  async delete(cursoId: number): Promise<boolean> {
-    const cursoExist = await this._cursoRepository.findOne(cursoId, {
-      where: { status: 'ACTIVE' },
-    });
-    if (!cursoExist) {
+  async delete(cursoId: string, user: User): Promise<boolean> {
+    const foundCurso = await this._cursoRepository
+      .createQueryBuilder('curso')
+      .innerJoin('curso.dashboard', 'dashboard')
+
+      .where('curso.id = :id', { id: cursoId })
+      .andWhere('dashboard.user = :user', { user: user.id })
+      .getOne();
+
+    if (!foundCurso) {
       throw new NotFoundException('Course does not exist');
     }
-    await this._cursoRepository.update(cursoId, { status: status.INACTIVE });
+    await this._cursoRepository.delete(foundCurso);
     return true;
   }
   async getAllByUser(user: User): Promise<Curso[]> {
@@ -90,5 +95,26 @@ export class CursoService {
       throw new NotFoundException('this course does not found');
     }
     return cursos;
+  }
+  async cambiarEstado(user: User, id: string, estado: boolean): Promise<Curso> {
+    const foundcurso = await this._cursoRepository
+      .createQueryBuilder('curso')
+      .innerJoin('curso.dashboard', 'dashboard')
+
+      .where('curso.id = :id', { id: id })
+      .andWhere('dashboard.user = :user', { user: user.id })
+      .getOne();
+
+    if (!foundcurso) {
+      throw new NotFoundException('this course does not found');
+    }
+    if (estado) {
+      foundcurso.disponible = true;
+      await this._cursoRepository.save(foundcurso);
+    } else {
+      foundcurso.disponible = false;
+      await this._cursoRepository.save(foundcurso);
+    }
+    return foundcurso;
   }
 }

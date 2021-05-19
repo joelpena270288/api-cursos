@@ -18,25 +18,29 @@ import { ActividadesExtraclase } from '../actividad-extraclase/actividadextracla
 
 @Entity('actividades')
 export class Actividad extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   nombre: string;
   @Column()
-  nota: number;
-  @Column()
   descripcion: string;
+  @Column()
+  numero: number;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-  
-  @ManyToOne(() => Clase, (clase) => clase.actividades)
+
+  @ManyToOne(() => Clase, (clase) => clase.actividades, {
+    cascade: true,
+    onDelete: 'CASCADE'
+    
+  } )
   clase: Clase;
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
   status: string;
   @OneToMany(() => Video, (video) => video.actividad)
-  video: Video;
+  videos: Video[];
   @OneToMany(() => Documento, (documento) => documento.actividad)
   documentos: Documento[];
   @OneToMany(() => Contenido, (contenido) => contenido.actividad)
@@ -44,6 +48,9 @@ export class Actividad extends BaseEntity {
 
   @OneToMany(() => PreguntaHtml, (preguntahtml) => preguntahtml.actividad)
   preguntas_html: PreguntaHtml[];
-  @OneToMany(() => ActividadesExtraclase,(actividadextraclase) => actividadextraclase.actividad)
-  actividades_extraclases: PreguntaHtml[];
+  @OneToMany(
+    () => ActividadesExtraclase,
+    (actividadextraclase) => actividadextraclase.actividad,
+  )
+  actividades_extraclases: ActividadesExtraclase[];
 }

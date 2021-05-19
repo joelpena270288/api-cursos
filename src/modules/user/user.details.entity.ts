@@ -27,6 +27,7 @@ export class UserDetails extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   intereses: string;
 
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: true })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: true })
