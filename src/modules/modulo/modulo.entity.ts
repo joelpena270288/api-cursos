@@ -36,7 +36,7 @@ export class Modulo extends BaseEntity {
   @OneToOne((type) => ExamenModulo, {
     cascade: true,
     nullable: true,
-    onDelete: 'CASCADE',
+  
   
   })
   @JoinColumn()

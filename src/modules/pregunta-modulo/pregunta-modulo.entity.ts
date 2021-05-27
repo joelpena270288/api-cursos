@@ -57,6 +57,7 @@ export class PreguntaModulo extends BaseEntity {
     () => ExamenModulo,
     (examenModulo) => examenModulo.preguntasModulo,
     {
+     
       cascade: true,
       onDelete: 'CASCADE',
     },

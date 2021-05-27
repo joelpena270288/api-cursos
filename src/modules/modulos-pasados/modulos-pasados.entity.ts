@@ -12,6 +12,7 @@ import {
 import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
 import { ClasePasada } from '../clases-pasadas/clases-pasadas.entity';
 import { UltimaClase } from '../ultima-clase/ultima-clase.entity';
+import { Modulo } from '../modulo/modulo.entity';
 @Entity('modulospasados')
 export class ModulosPasados extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -25,9 +26,14 @@ export class ModulosPasados extends BaseEntity {
     },
   )
   cursoProgreso: CursosProgreso;
-  @OneToMany(() => ClasePasada, (clasespasadas) => clasespasadas.moduloPasado)
-  @JoinTable()
-  clasespasadas: ClasePasada[];
+  @OneToOne((type) => Modulo, {
+    cascade: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  modulo: Modulo;
+ 
 
 }
 

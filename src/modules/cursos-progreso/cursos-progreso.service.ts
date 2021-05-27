@@ -23,6 +23,7 @@ import { ModulosPasadosRepository } from '../modulos-pasados/modulos-pasados.rep
 import { ModulosPasados } from '../modulos-pasados/modulos-pasados.entity';
 import { ModuloActual } from '../modulo-actual/modulo-actual.entity';
 import { ModuloActualRepository } from '../modulo-actual/modulo-actual.repository';
+import { copyFile } from 'node:fs';
 
 @Injectable()
 export class CursosProgresoService {
@@ -59,7 +60,9 @@ export class CursosProgresoService {
     const cursofound = await this._cursoRepository
       .createQueryBuilder('curso')
       .leftJoinAndSelect('curso.modulos', 'modulos')
+      .addOrderBy('modulos.numeromodulo')
       .leftJoinAndSelect('modulos.clases', 'clases')
+      .addOrderBy('clases.numeroclase')
       .where('curso.id = :id', { id: id })
       .getOne();
     if (!cursofound) {
@@ -180,11 +183,20 @@ export class CursosProgresoService {
 
         .leftJoinAndSelect('cursoprogreso.moduloActual', 'moduloActual')
         .leftJoinAndSelect('cursoprogreso.modulospasados', 'modulospasados')
-        .leftJoinAndSelect('modulospasados.clasespasadas', 'clasespasadas')
-        .leftJoinAndSelect('clasespasadas.clase', 'class')
+        .leftJoinAndSelect('modulospasados.modulo', 'modulopasado')
+        .addOrderBy('modulopasado.numeromodulo')
+        .leftJoinAndSelect('modulopasado.clases', 'clasesMP')
+        .addOrderBy('clasesMP.numeroclase')
+        .leftJoinAndSelect('clasesMP.actividades', 'actividadesMP')
+        .leftJoinAndSelect('actividadesMP.videos', 'videosMP')
+        .leftJoinAndSelect('actividadesMP.documentos', 'documentosMP')
+        .leftJoinAndSelect('actividadesMP.contenidos', 'contenidosMP')
+        .leftJoinAndSelect('actividadesMP.preguntas_html', 'preguntas_htmlMP')
+        .leftJoinAndSelect('actividadesMP.actividades_extraclases', 'actividades_extraclasesMP')
 
         .leftJoinAndSelect('moduloActual.ultimaclase', 'ultimaclase')
         .leftJoinAndSelect('moduloActual.clasespasadas', 'allclasespasadas')
+        .leftJoinAndSelect('allclasespasadas.clase', 'allpassclass')
 
         .leftJoinAndSelect('moduloActual.modulo', 'modulo')
         .leftJoinAndSelect('modulo.examen', 'examen')
@@ -203,23 +215,18 @@ export class CursosProgresoService {
 
         .leftJoinAndSelect('clase.actividades', 'actividades')
         .addOrderBy('actividades.numero')
-        .leftJoinAndSelect('class.actividades', 'allactividades')
-        .addOrderBy('allactividades.numero')
+
         .leftJoinAndSelect('actividades.videos', 'videos')
-        .leftJoinAndSelect('allactividades.videos', 'allvideos')
+
         .leftJoinAndSelect('actividades.documentos', 'documentos')
-        .leftJoinAndSelect('allactividades.documentos', 'alldocumentos')
+
         .leftJoinAndSelect('actividades.contenidos', 'contenidos')
-        .leftJoinAndSelect('allactividades.contenidos', 'allcontenidos')
+
         .leftJoinAndSelect('actividades.preguntas_html', 'preguntas_html')
-        .leftJoinAndSelect('allactividades.preguntas_html', 'allpreguntas_html')
+
         .leftJoinAndSelect(
           'actividades.actividades_extraclases',
           'actividades_extraclases',
-        )
-        .leftJoinAndSelect(
-          'allactividades.actividades_extraclases',
-          'allactividades_extraclases',
         )
 
         .innerJoin('cursoprogreso.planEstudio', 'planEstudio')
@@ -245,6 +252,8 @@ export class CursosProgresoService {
       .leftJoinAndSelect('moduloActual.modulo', 'modulo')
       .addOrderBy('modulos.numeromodulo')
       .leftJoinAndSelect('moduloActual.ultimaclase', 'ultimaclase')
+      .leftJoinAndSelect('modulo.examen', 'examen')
+      .leftJoinAndSelect('examen.preguntasModulo', 'preguntasModulo')
       .leftJoinAndSelect('ultimaclase.clase', 'clase')
       .leftJoinAndSelect('clase.actividades', 'actividades')
       .addOrderBy('actividades.numero')
@@ -294,104 +303,73 @@ export class CursosProgresoService {
     }
 
     if (result === 100) {
-      const posultimoModulo = cursoprogresofound.curso.modulos.length - 1;
-      const posultimaClaseCurso =
-        cursoprogresofound.curso.modulos[posultimoModulo].clases.length - 1;
-      if (
-        cursoprogresofound.curso.modulos[posultimoModulo].id ===
-        cursoProgresoPreguntaHtmlDto.id
-      ) {
-        if (
-          cursoprogresofound.curso.modulos[posultimoModulo].clases[
-            posultimaClaseCurso
-          ].id === cursoProgresoPreguntaHtmlDto.idclase
-        ) {
-          const nuevaclasepasada = new ClasePasada();
-          nuevaclasepasada.clase =
-            cursoprogresofound.curso.modulos[posultimoModulo].clases[
-              posultimaClaseCurso
-            ];
-          nuevaclasepasada.moduloActual = cursoprogresofound.moduloActual;
-
-          const savedclasePasada = await this._clasePasadaRepository.save(
-            nuevaclasepasada,
-          );
-
-          cursoprogresofound.moduloActual.ultimaclase.nota = result;
-          this._ultimaClaseRepository.save(
-            cursoprogresofound.moduloActual.ultimaclase,
-          );
-          throw new BadRequestException('You passed all modules');
-        } else {
-          for (
-            let i = 0;
-            i < cursoprogresofound.curso.modulos[posultimoModulo].clases.length;
-            i++
-          ) {
+      const listaclases = await this._claseRepository
+        .createQueryBuilder('clase')
+        .addOrderBy('clase.numeroclase')
+        .innerJoin('clase.modulo', 'modulo')
+        .where('modulo.id = :id', {
+          id: cursoprogresofound.moduloActual.modulo.id,
+        })
+        .getMany();
+      for (let index = 0; index < listaclases.length; index++) {
+        if (listaclases[index].id === cursoProgresoPreguntaHtmlDto.idclase) {
+          if (index === listaclases.length - 1) {
             if (
-              cursoprogresofound.curso.modulos[posultimoModulo].clases[i].id ===
-              cursoProgresoPreguntaHtmlDto.idclase
+              cursoprogresofound.moduloActual.modulo.examen.preguntasModulo
+                .length > 0
             ) {
-              const nuevaclasepasada = new ClasePasada();
-              nuevaclasepasada.clase =
-                cursoprogresofound.curso.modulos[posultimoModulo].clases[i];
-              nuevaclasepasada.moduloActual = cursoprogresofound.moduloActual;
-
-              const savedclasePasada = await this._clasePasadaRepository.save(
-                nuevaclasepasada,
-              );
-              cursoprogresofound.moduloActual.ultimaclase.clase =
-                cursoprogresofound.curso.modulos[posultimoModulo].clases[i];
-              this._ultimaClaseRepository.save(
-                cursoprogresofound.moduloActual.ultimaclase,
-              );
+              throw new BadRequestException('Tiene que hacer el examen');
             }
-          }
-        }
-      } else {
-        const listaclases = await this._claseRepository
-          .createQueryBuilder('clase')
-          .addOrderBy('clase.numeroclase')
-          .innerJoin('clase.modulo', 'modulo')
-          .where('modulo.id = :id', {
-            id: cursoProgresoPreguntaHtmlDto.id,
-          })
-          .getMany();
-        for (let k = 0; k < listaclases.length; k++) {
-          if (
-            listaclases[k].id === cursoProgresoPreguntaHtmlDto.idclase &&
-            cursoprogresofound.moduloActual.ultimaclase.clase.id
-          ) {
-            if (k === listaclases.length - 1) {
-              const nuevaclasepasada = new ClasePasada();
-              nuevaclasepasada.clase =
-                cursoprogresofound.curso.modulos[posultimoModulo].clases[k];
-              nuevaclasepasada.moduloActual = cursoprogresofound.moduloActual;
 
-              const savedclasePasada = await this._clasePasadaRepository.save(
-                nuevaclasepasada,
-              );
-              cursoprogresofound.moduloActual.ultimaclase.clase =
-                cursoprogresofound.curso.modulos[posultimoModulo].clases[k];
-              this._ultimaClaseRepository.save(
-                cursoprogresofound.moduloActual.ultimaclase,
-              );
-            } else {
-              const nuevaclasepasada = new ClasePasada();
-              nuevaclasepasada.clase =
-                cursoprogresofound.curso.modulos[posultimoModulo].clases[k];
-              nuevaclasepasada.moduloActual = cursoprogresofound.moduloActual;
+            //this._cursoProgresoRepository.save(cursoprogresofound);
+            const clasepasada = new ClasePasada();
+            clasepasada.clase = listaclases[index];
+            clasepasada.moduloActual = cursoprogresofound.moduloActual;
+            this._clasePasadaRepository.save(clasepasada);
+            for (let j = 0; j < cursoprogresofound.curso.modulos.length; j++) {
+              if (
+                cursoprogresofound.curso.modulos[j].id ===
+                cursoprogresofound.moduloActual.modulo.id
+              ) {
+                if (j === cursoprogresofound.curso.modulos.length - 1) {
+                  cursoprogresofound.moduloActual.ultimaclase.clase = null;
+                  throw new BadRequestException('All modules was passed');
+                } else {
+                  if (
+                    cursoprogresofound.curso.modulos[j + 1].clases.length === 0
+                  ) {
+                    throw new BadRequestException(
+                      'The next module not have any class',
+                    );
+                  }
+                  const moduloPasado = new ModulosPasados();
+                  moduloPasado.cursoProgreso = cursoprogresofound;
+                  moduloPasado.modulo = cursoprogresofound.moduloActual.modulo;
+                  this._modulosPasadosRepository.save(moduloPasado);
+                  cursoprogresofound.moduloActual.modulo =
+                    cursoprogresofound.curso.modulos[j + 1];
 
-              const savedclasePasada = await this._clasePasadaRepository.save(
-                nuevaclasepasada,
-              );
-              cursoprogresofound.moduloActual.ultimaclase.clase =
-                cursoprogresofound.curso.modulos[posultimoModulo].clases[k + 1];
-              this._ultimaClaseRepository.save(
-                cursoprogresofound.moduloActual.ultimaclase,
-              );
+                  cursoprogresofound.moduloActual.ultimaclase.clase =
+                    cursoprogresofound.curso.modulos[j + 1].clases[0];
+                  cursoprogresofound.moduloActual.clasespasadas = null;
+                  this._cursoProgresoRepository.save(cursoprogresofound);
+                  break;
+                }
+              }
             }
+
+            break;
+          } else {
+            const clasepasada = new ClasePasada();
+            clasepasada.clase = listaclases[index];
+            clasepasada.moduloActual = cursoprogresofound.moduloActual;
+            this._clasePasadaRepository.save(clasepasada);
+            cursoprogresofound.moduloActual.ultimaclase.clase =
+              listaclases[index + 1];
+            this._cursoProgresoRepository.save(cursoprogresofound);
+            break;
           }
+          break;
         }
       }
     }

@@ -18,11 +18,7 @@ export class ClasePasada extends BaseEntity {
   })
   moduloActual: ModuloActual;
 
-  @ManyToOne(() => ModulosPasados, (moduloPasado) => moduloPasado.clasespasadas, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  moduloPasado: ModulosPasados;
+ 
 
   @Column({ default: 0, type: 'decimal' })
   nota: number;
