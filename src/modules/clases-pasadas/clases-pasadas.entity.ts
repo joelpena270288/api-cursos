@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ModuloActual } from '../modulo-actual/modulo-actual.entity';
-import {ModulosPasados} from '../modulos-pasados/modulos-pasados.entity';
+import { ModulosPasados } from '../modulos-pasados/modulos-pasados.entity';
 import { Clase } from '../clase/clase.entity';
 @Entity('clasespasadas')
 export class ClasePasada extends BaseEntity {
@@ -17,8 +17,6 @@ export class ClasePasada extends BaseEntity {
     onDelete: 'CASCADE',
   })
   moduloActual: ModuloActual;
-
- 
 
   @Column({ default: 0, type: 'decimal' })
   nota: number;

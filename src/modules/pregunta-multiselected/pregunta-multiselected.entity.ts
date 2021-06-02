@@ -21,6 +21,5 @@ export class PreguntaMultiselected extends BaseEntity {
     (preguntaVof) => preguntaVof.preguntaMultiselected,
   )
   preguntasvaluesVoF: PreguntaValueVoF[];
-
- 
+  
 }

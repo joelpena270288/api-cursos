@@ -1,3 +1,4 @@
-export {ReadCursoDto} from "./read-curso.dto";
-export {CursoDto } from "./curso.dto";
-export {UpdateCursoDto} from "./update-curso.dto";
+export { ReadCursoDto } from './read-curso.dto';
+export { CursoDto } from './curso.dto';
+export { UpdateCursoDto } from './update-curso.dto';
+export { ReadCursoEstudentDto } from './cursoEstudentRead.dto';

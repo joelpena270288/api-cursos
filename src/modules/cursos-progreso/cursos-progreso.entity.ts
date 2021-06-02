@@ -21,6 +21,7 @@ import { ModulosPasados } from '../modulos-pasados/modulos-pasados.entity';
 import {ModuloActual} from '../modulo-actual/modulo-actual.entity';
 @Entity('cursos-progreso')
 export class CursosProgreso extends BaseEntity {
+  [x: string]: any;
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @ManyToOne(() => PlanEstudio, (planEstudio) => planEstudio.cursosProgreso)

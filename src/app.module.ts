@@ -1,3 +1,4 @@
+
 import { ModuloActualModule } from './modules/modulo-actual/modulo-actual.module';
 import { ModulosPasadosModule } from './modules/modulos-pasados/modulos-pasados.module';
 import { PreguntaModuloModule } from './modules/pregunta-modulo/pregunta-modulo.module';
@@ -41,7 +42,7 @@ import { ActividadExtraclaseModule } from './modules/actividad-extraclase/activi
 import { NotaModule } from './modules/nota/nota.module';
 @Module({
   imports: [
-        ModuloActualModule, 
+    ModuloActualModule,
     ModulosPasadosModule,
     PreguntaModuloModule,
     PreguntaVfModule,
@@ -79,8 +80,10 @@ import { NotaModule } from './modules/nota/nota.module';
     ActividadExtraclaseModule,
     NotaModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [
+   ],
+  providers: [
+    ],
 })
 export class AppModule {
   static port: number | string;

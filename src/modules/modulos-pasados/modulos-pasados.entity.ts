@@ -17,6 +17,8 @@ import { Modulo } from '../modulo/modulo.entity';
 export class ModulosPasados extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+  @Column()
+  nota: number;
   @ManyToOne(
     () => CursosProgreso,
     (cursoProgreso) => cursoProgreso.modulospasados,
@@ -33,7 +35,4 @@ export class ModulosPasados extends BaseEntity {
   })
   @JoinColumn()
   modulo: Modulo;
- 
-
 }
-
