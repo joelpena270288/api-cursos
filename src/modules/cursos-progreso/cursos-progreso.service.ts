@@ -272,6 +272,7 @@ export class CursosProgresoService {
       .leftJoinAndSelect('curso.modulos', 'modulos')
       .leftJoinAndSelect('modulos.clases', 'clases')
       .leftJoinAndSelect('moduloActual.modulo', 'modulo')
+      .leftJoinAndSelect('modulo.clases', 'clasesmodulo')
       .addOrderBy('modulos.numeromodulo')
       .leftJoinAndSelect('moduloActual.ultimaclase', 'ultimaclase')
       .leftJoinAndSelect('modulo.examen', 'examen')
@@ -325,81 +326,63 @@ export class CursosProgresoService {
     }
 
     if (result === 100) {
-      const listaclases = await this._claseRepository
+      const ultimaclase = await this._claseRepository
         .createQueryBuilder('clase')
-        .addOrderBy('clase.numeroclase')
+        .orderBy('clase.numeroclase', 'DESC')
         .innerJoin('clase.modulo', 'modulo')
         .where('modulo.id = :id', {
           id: cursoprogresofound.moduloActual.modulo.id,
         })
-        .getMany();
-      for (let index = 0; index < listaclases.length; index++) {
-        if (listaclases[index].id === cursoProgresoPreguntaHtmlDto.idclase) {
-          if (
-            index === listaclases.length - 1 &&
-            cursoProgresoPreguntaHtmlDto.idclase !=
-              cursoprogresofound.moduloActual.ultimaclase.clase.id
+
+        .getOne();
+      if (ultimaclase.id === cursoProgresoPreguntaHtmlDto.idclase) {
+        const clasepasadafound = await this._clasePasadaRepository
+          .createQueryBuilder('clasepasada')
+          .innerJoin('clasepasada.clase', 'clase')
+          .innerJoin('clase.modulo', 'modulo')
+          .innerJoin('modulo.curso', 'curso')
+          .innerJoin('curso.dashboard', 'dashboard')
+
+          .where('modulo.id = :id', {
+            id: cursoprogresofound.moduloActual.modulo.id,
+          })
+          .andWhere('dashboard.user = :user', { user: user.id })
+          .andWhere('clase.id = :id', {
+            id: cursoProgresoPreguntaHtmlDto.idclase,
+          })
+          .getOne();
+        if (!clasepasadafound) {
+          const clasepasada = new ClasePasada();
+          clasepasada.clase = ultimaclase;
+          clasepasada.moduloActual = cursoprogresofound.moduloActual;
+          await this._clasePasadaRepository.save(clasepasada);
+          cursoprogresofound.moduloActual.ultimaclase.examen =
+            cursoprogresofound.moduloActual.modulo.examen;
+          cursoprogresofound.moduloActual.ultimaclase.clase = null;
+          await this._cursoProgresoRepository.save(cursoprogresofound);
+        }
+      } else {
+        if (!cursoprogresofound.moduloActual.ultimaclase.examen) {
+          for (
+            let i = 0;
+            i < cursoprogresofound.moduloActual.modulo.clases.length;
+            i++
           ) {
-            //this._cursoProgresoRepository.save(cursoprogresofound);
-            const clasepasada = new ClasePasada();
-            clasepasada.clase = listaclases[index];
-            clasepasada.moduloActual = cursoprogresofound.moduloActual;
-            this._clasePasadaRepository.save(clasepasada);
-            if (cursoprogresofound.moduloActual.modulo.examen.preguntasModulo) {
-              const ultimaclase = new UltimaClase();
-              ultimaclase.examen =
-                cursoprogresofound.moduloActual.modulo.examen;
-              cursoprogresofound.moduloActual.ultimaclase = ultimaclase;
-
-              this._cursoProgresoRepository.save(cursoprogresofound);
-            } else {
-              for (let j = 0; j < cursoprogresofound.curso.modulos.length; j++) {
-                if (
-                  cursoprogresofound.curso.modulos[j].id ===
-                  cursoprogresofound.moduloActual.modulo.id
-                ) {
-                  if (j === cursoprogresofound.curso.modulos.length - 1) {
-                    cursoprogresofound.moduloActual.ultimaclase.clase = null;
-                    throw new BadRequestException('All modules was passed');
-                  } else {
-                    if (
-                      cursoprogresofound.curso.modulos[j + 1].clases.length === 0
-                    ) {
-                      throw new BadRequestException(
-                        'The next module not have any class',
-                      );
-                    }
-                    const moduloPasado = new ModulosPasados();
-                    moduloPasado.cursoProgreso = cursoprogresofound;
-                    moduloPasado.modulo = cursoprogresofound.moduloActual.modulo;
-                    this._modulosPasadosRepository.save(moduloPasado);
-                    cursoprogresofound.moduloActual.modulo =
-                      cursoprogresofound.curso.modulos[j + 1];
-  
-                    cursoprogresofound.moduloActual.ultimaclase.clase =
-                      cursoprogresofound.curso.modulos[j + 1].clases[0];
-                    cursoprogresofound.moduloActual.clasespasadas = null;
-                    this._cursoProgresoRepository.save(cursoprogresofound);
-                    break;
-                  }
-                }
-              }
+            if (
+              cursoProgresoPreguntaHtmlDto.idclase ===
+              cursoprogresofound.moduloActual.modulo.clases[i].id
+            ) {
+              const clasepasada = new ClasePasada();
+              clasepasada.clase =
+                cursoprogresofound.moduloActual.modulo.clases[i];
+              clasepasada.moduloActual = cursoprogresofound.moduloActual;
+              await this._clasePasadaRepository.save(clasepasada);
+              cursoprogresofound.moduloActual.ultimaclase.clase =
+                cursoprogresofound.moduloActual.modulo.clases[i + 1];
+              await this._cursoProgresoRepository.save(cursoprogresofound);
+              break;
             }
-
-           
-
-            break;
-          } else {
-            const clasepasada = new ClasePasada();
-            clasepasada.clase = listaclases[index];
-            clasepasada.moduloActual = cursoprogresofound.moduloActual;
-            this._clasePasadaRepository.save(clasepasada);
-            cursoprogresofound.moduloActual.ultimaclase.clase =
-              listaclases[index + 1];
-            this._cursoProgresoRepository.save(cursoprogresofound);
-            break;
           }
-          break;
         }
       }
     }
