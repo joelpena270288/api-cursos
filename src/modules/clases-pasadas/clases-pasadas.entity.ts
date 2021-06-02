@@ -20,6 +20,11 @@ export class ClasePasada extends BaseEntity {
 
   @Column({ default: 0, type: 'decimal' })
   nota: number;
-  @ManyToOne(() => Clase, (clase) => clase.clasespasadas)
+  @ManyToOne(() => Clase, (clase) => clase.clasespasadas, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    
+   
+  })
   clase: Clase;
 }

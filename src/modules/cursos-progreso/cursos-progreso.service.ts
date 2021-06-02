@@ -326,31 +326,40 @@ export class CursosProgresoService {
     }
 
     if (result === 100) {
-      const ultimaclase = await this._claseRepository
-        .createQueryBuilder('clase')
-        .orderBy('clase.numeroclase', 'DESC')
-        .innerJoin('clase.modulo', 'modulo')
-        .where('modulo.id = :id', {
-          id: cursoprogresofound.moduloActual.modulo.id,
-        })
-
-        .getOne();
-      if (ultimaclase.id === cursoProgresoPreguntaHtmlDto.idclase) {
-        const clasepasadafound = await this._clasePasadaRepository
-          .createQueryBuilder('clasepasada')
-          .innerJoin('clasepasada.clase', 'clase')
+      let ultimaclase;
+      try {
+        ultimaclase = await this._claseRepository
+          .createQueryBuilder('clase')
+          .orderBy('clase.numeroclase', 'DESC')
           .innerJoin('clase.modulo', 'modulo')
-          .innerJoin('modulo.curso', 'curso')
-          .innerJoin('curso.dashboard', 'dashboard')
-
           .where('modulo.id = :id', {
             id: cursoprogresofound.moduloActual.modulo.id,
           })
-          .andWhere('dashboard.user = :user', { user: user.id })
-          .andWhere('clase.id = :id', {
-            id: cursoProgresoPreguntaHtmlDto.idclase,
-          })
           .getOne();
+      } catch (e) {
+        throw new BadRequestException(e);
+      }
+      if (ultimaclase.id === cursoProgresoPreguntaHtmlDto.idclase) {
+        let clasepasadafound;
+        try {
+          clasepasadafound = await this._clasePasadaRepository
+            .createQueryBuilder('clasepasada')
+            .innerJoin('clasepasada.clase', 'clase')
+            .innerJoin('clase.modulo', 'modulo')
+            .innerJoin('modulo.curso', 'curso')
+            .innerJoin('curso.dashboard', 'dashboard')
+            .where('modulo.id = :id', {
+              id: cursoprogresofound.moduloActual.modulo.id,
+            })
+            .andWhere('clase.id = :idclase', {
+              idclase: cursoProgresoPreguntaHtmlDto.idclase,
+            })
+            .andWhere('dashboard.user = :user', { user: user.id })
+            
+            .getOne();
+        } catch (e) {
+          throw new BadRequestException(e);
+        }
         if (!clasepasadafound) {
           const clasepasada = new ClasePasada();
           clasepasada.clase = ultimaclase;
