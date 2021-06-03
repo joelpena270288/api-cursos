@@ -13,7 +13,9 @@ import { ClasePasadaRepository } from '../clases-pasadas/clase-pasada.repository
 import { ClaseRepository } from '../clase/clase.repository';
 import { ModulosPasadosRepository } from '../modulos-pasados/modulos-pasados.repository';
 import { ModuloActualRepository } from '../modulo-actual/modulo-actual.repository';
-
+import { ExamenFinalRepository } from '../examen-final-curso/examen-final.repository';
+import { CursosPasadosRepository } from '../cursos-pasados/cursos-pasados.repository';
+import { ExamenModuloRepository } from '../examen-modulo/examen-modulo.repository';
 
 @Module({
   imports: [
@@ -28,6 +30,9 @@ import { ModuloActualRepository } from '../modulo-actual/modulo-actual.repositor
       ClaseRepository,
       ModulosPasadosRepository,
       ModuloActualRepository,
+      ExamenFinalRepository,
+      CursosPasadosRepository,
+      ExamenModuloRepository,
     ]),
     AuthModule,
   ],

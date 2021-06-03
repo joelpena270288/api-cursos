@@ -23,6 +23,12 @@ import { ModulosPasadosRepository } from '../modulos-pasados/modulos-pasados.rep
 import { ModulosPasados } from '../modulos-pasados/modulos-pasados.entity';
 import { ModuloActual } from '../modulo-actual/modulo-actual.entity';
 import { ModuloActualRepository } from '../modulo-actual/modulo-actual.repository';
+import { ExamenFinalRepository } from '../examen-final-curso/examen-final.repository';
+import { ExamenFinal } from '../examen-final-curso/examen-final.entity';
+import { CursosPasadosRepository } from '../cursos-pasados/cursos-pasados.repository';
+import { ExamenModuloRepository } from '../examen-modulo/examen-modulo.repository';
+
+import { CursosPasados } from '../cursos-pasados/cursos-pasados.entity';
 import { copyFile } from 'node:fs';
 
 @Injectable()
@@ -47,7 +53,13 @@ export class CursosProgresoService {
     @InjectRepository(ModulosPasadosRepository)
     private readonly _modulosPasadosRepository: ModulosPasadosRepository,
     @InjectRepository(ModuloActualRepository)
-    private readonly moduloActualRepository: ModuloActualRepository,
+    private readonly _moduloActualRepository: ModuloActualRepository,
+    @InjectRepository(ExamenFinalRepository)
+    private readonly _examenFinalRepository: ExamenFinalRepository,
+    @InjectRepository(CursosPasadosRepository)
+    private readonly _cursosPasadosRepository: CursosPasadosRepository,
+    @InjectRepository(ExamenModuloRepository)
+    private readonly _examenModuloRepository: ExamenModuloRepository,
   ) {}
 
   async create(id: string, user: User): Promise<CursosProgreso> {
@@ -116,7 +128,7 @@ export class CursosProgresoService {
       moduloActual.ultimaclase = ultimaclase;
       moduloActual.modulo = cursofound.modulos[0];
 
-      const savedModuloActual = await this.moduloActualRepository.save(
+      const savedModuloActual = await this._moduloActualRepository.save(
         moduloActual,
       );
       cursosprogress.moduloActual = savedModuloActual;
@@ -198,6 +210,8 @@ export class CursosProgresoService {
         )
 
         .leftJoinAndSelect('moduloActual.ultimaclase', 'ultimaclase')
+        
+        .leftJoinAndSelect('ultimaclase.examenModulo', 'examenModulo')
         .leftJoinAndSelect('moduloActual.clasespasadas', 'allclasespasadas')
         .leftJoinAndSelect('allclasespasadas.clase', 'allpassclass')
 
@@ -281,8 +295,8 @@ export class CursosProgresoService {
       .leftJoinAndSelect('clase.actividades', 'actividades')
       .addOrderBy('actividades.numero')
       .leftJoinAndSelect('actividades.preguntas_html', 'preguntas_html')
-      .innerJoin('cursoprogreso.planEstudio', 'planEstudio')
-      .innerJoin('planEstudio.dashboard', 'dashboard')
+      .leftJoinAndSelect('cursoprogreso.planEstudio', 'planEstudio')
+      .leftJoinAndSelect('planEstudio.dashboard', 'dashboard')
       .where('cursoprogreso.id = :id', { id: cursoProgresoPreguntaHtmlDto.id })
       .andWhere('dashboard.user = :user', { user: user.id })
       .getOne();
@@ -339,39 +353,80 @@ export class CursosProgresoService {
       } catch (e) {
         throw new BadRequestException(e);
       }
+      let clasepasadafound;
+      try {
+        clasepasadafound = await this._clasePasadaRepository
+          .createQueryBuilder('clasepasada')
+          .innerJoin('clasepasada.clase', 'clase')
+          .innerJoin('clase.modulo', 'modulo')
+          .innerJoin('modulo.curso', 'curso')
+          .innerJoin('curso.dashboard', 'dashboard')
+          .where('modulo.id = :id', {
+            id: cursoprogresofound.moduloActual.modulo.id,
+          })
+          .andWhere('clase.id = :idclase', {
+            idclase: cursoProgresoPreguntaHtmlDto.idclase,
+          })
+          .andWhere('dashboard.user = :user', { user: user.id })
+
+          .getOne();
+      } catch (e) {
+        throw new BadRequestException(e);
+      }
       if (ultimaclase.id === cursoProgresoPreguntaHtmlDto.idclase) {
-        let clasepasadafound;
-        try {
-          clasepasadafound = await this._clasePasadaRepository
-            .createQueryBuilder('clasepasada')
-            .innerJoin('clasepasada.clase', 'clase')
-            .innerJoin('clase.modulo', 'modulo')
-            .innerJoin('modulo.curso', 'curso')
-            .innerJoin('curso.dashboard', 'dashboard')
-            .where('modulo.id = :id', {
-              id: cursoprogresofound.moduloActual.modulo.id,
-            })
-            .andWhere('clase.id = :idclase', {
-              idclase: cursoProgresoPreguntaHtmlDto.idclase,
-            })
-            .andWhere('dashboard.user = :user', { user: user.id })
-            
-            .getOne();
-        } catch (e) {
-          throw new BadRequestException(e);
-        }
         if (!clasepasadafound) {
           const clasepasada = new ClasePasada();
           clasepasada.clase = ultimaclase;
           clasepasada.moduloActual = cursoprogresofound.moduloActual;
           await this._clasePasadaRepository.save(clasepasada);
-          cursoprogresofound.moduloActual.ultimaclase.examen =
-            cursoprogresofound.moduloActual.modulo.examen;
-          cursoprogresofound.moduloActual.ultimaclase.clase = null;
-          await this._cursoProgresoRepository.save(cursoprogresofound);
+
+          if (
+            cursoprogresofound.moduloActual.modulo.examen.preguntasModulo
+              .length > 0
+          ) {
+            cursoprogresofound.moduloActual.ultimaclase.examenModulo =
+              cursoprogresofound.moduloActual.modulo.examen;
+            cursoprogresofound.moduloActual.ultimaclase.clase = null;
+            await this._cursoProgresoRepository.save(cursoprogresofound);
+          } else {
+            for (let p = 0; p < cursoprogresofound.curso.modulos.length; p++) {
+              if (
+                cursoprogresofound.moduloActual.modulo.id ===
+                cursoprogresofound.curso.modulos[
+                  cursoprogresofound.curso.modulos.length - 1
+                ].id
+              ) {
+                const examenfinalfound = await this._examenFinalRepository
+                  .createQueryBuilder('examenFinal')
+                  .leftJoinAndSelect('examenFinal.curso', 'curso')
+                  .leftJoinAndSelect(
+                    'examenFinal.preguntasModulo',
+                    'preguntasModulo',
+                  )
+                  .leftJoinAndSelect('examenFinal.ultimaclase', 'ultimaclase')
+                  .leftJoinAndSelect('curso.dashboard', 'dashboard')
+                  .andWhere('dashboard.user = :user', { user: user.id })
+                  .getOne();
+
+                if (examenfinalfound) {
+                  cursoprogresofound.moduloActual.ultimaclase.examenModulo = null;
+                  cursoprogresofound.moduloActual.ultimaclase.examenFinal = examenfinalfound;
+                } else {
+                  const cursopasado = new CursosPasados();
+                  cursopasado.curso = cursoprogresofound.curso;
+                  cursopasado.planEstudio = cursoprogresofound.planEstudio;
+                  await this._modulosPasadosRepository.save(cursopasado);
+                  await this._cursoProgresoRepository.delete(
+                    cursoprogresofound,
+                  );
+                }
+                break;
+              }
+            }
+          }
         }
       } else {
-        if (!cursoprogresofound.moduloActual.ultimaclase.examen) {
+        if (!cursoprogresofound.moduloActual.ultimaclase.examenModulo) {
           for (
             let i = 0;
             i < cursoprogresofound.moduloActual.modulo.clases.length;
@@ -381,15 +436,17 @@ export class CursosProgresoService {
               cursoProgresoPreguntaHtmlDto.idclase ===
               cursoprogresofound.moduloActual.modulo.clases[i].id
             ) {
-              const clasepasada = new ClasePasada();
-              clasepasada.clase =
-                cursoprogresofound.moduloActual.modulo.clases[i];
-              clasepasada.moduloActual = cursoprogresofound.moduloActual;
-              await this._clasePasadaRepository.save(clasepasada);
-              cursoprogresofound.moduloActual.ultimaclase.clase =
-                cursoprogresofound.moduloActual.modulo.clases[i + 1];
-              await this._cursoProgresoRepository.save(cursoprogresofound);
-              break;
+              if (!clasepasadafound) {
+                const clasepasada = new ClasePasada();
+                clasepasada.clase =
+                  cursoprogresofound.moduloActual.modulo.clases[i];
+                clasepasada.moduloActual = cursoprogresofound.moduloActual;
+                await this._clasePasadaRepository.save(clasepasada);
+                cursoprogresofound.moduloActual.ultimaclase.clase =
+                  cursoprogresofound.moduloActual.modulo.clases[i + 1];
+                await this._cursoProgresoRepository.save(cursoprogresofound);
+                break;
+              }
             }
           }
         }

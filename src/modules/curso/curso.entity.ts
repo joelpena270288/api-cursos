@@ -14,6 +14,8 @@ import { Dashboard } from '../dashboard/dashboard.entity';
 import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
 import { CursosPasados } from '../cursos-pasados/cursos-pasados.entity';
 
+
+
 @Entity('cursos')
 export class Curso extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')

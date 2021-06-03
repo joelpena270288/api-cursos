@@ -14,6 +14,7 @@ import {
 import { CursosProgreso } from '../cursos-progreso/cursos-progreso.entity';
 import { ExamenModulo } from '../examen-modulo/examen-modulo.entity';
 import { Clase } from '../clase/clase.entity';
+import { ExamenFinal } from '../examen-final-curso/examen-final.entity';
 @Entity('ultimaclase')
 export class UltimaClase extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -24,12 +25,19 @@ export class UltimaClase extends BaseEntity {
   })
   clase: Clase;
 
-  @OneToOne(() => ExamenModulo, {
+  @ManyToOne(() => ExamenModulo, (examenModulo) => examenModulo.ultimaclase, {
     cascade: true,
     nullable: true,
   })
   @JoinColumn()
-  examen: ExamenModulo;
+  examenModulo: ExamenModulo;
+
+  @ManyToOne(() => ExamenFinal, (examenFinal) => examenFinal.ultimaclase, {
+    cascade: true,
+    nullable: true,
+  })
+  @JoinColumn()
+  examenFinal: ExamenFinal;
   @Column({ default: 0, type: 'decimal' })
   nota: number;
 }

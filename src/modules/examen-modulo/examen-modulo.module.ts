@@ -8,11 +8,7 @@ import { ModuloRepository } from '../modulo/modulo.repository';
 import { ExamenModuloRepository } from './examen-modulo.repository';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-     
-      ModuloRepository,
-      ExamenModuloRepository,
-    ]),
+    TypeOrmModule.forFeature([ModuloRepository, ExamenModuloRepository]),
     AuthModule,
   ],
   controllers: [ExamenModuloController],
