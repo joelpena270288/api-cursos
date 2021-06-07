@@ -15,6 +15,7 @@ import { RoleGuard } from '../role/guards/role.guard';
 import { RoleType } from '../role/roletype.enum';
 import { User } from '../user/user.entity';
 import { ExamenModuloService } from './examen-modulo.service';
+import { ExmanenModuloInDto } from './dto/examen-modulo-in.dto';
 @Controller('examenModulo')
 export class ExamenModuloController {
   constructor(private readonly examenModuloService: ExamenModuloService) {}
@@ -26,5 +27,11 @@ export class ExamenModuloController {
     @GetUser() user: User,
   ) {
     return this.examenModuloService.getExamen(idmodulo, user);
+  }
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR)
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Post()
+  postEvaluar(@Body() enviarexamen: ExmanenModuloInDto, @GetUser() user: User) {
+    return this.examenModuloService.evaluarExamen(enviarexamen, user);
   }
 }

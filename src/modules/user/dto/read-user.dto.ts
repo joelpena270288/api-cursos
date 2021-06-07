@@ -3,8 +3,8 @@ import { IsNumber, IsEmail, IsString } from 'class-validator';
 
 import { ReadDetailsDto } from './read-user-details.dto';
 export class ReadUserDto {
-  @IsNumber()
-  readonly id: number;
+  @IsString()
+  readonly id: string;
   @IsEmail()
   readonly email: string;
   @IsString()

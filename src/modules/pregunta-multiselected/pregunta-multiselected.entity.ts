@@ -15,11 +15,11 @@ import { PreguntaValueVoF } from '../preguntas-valueVoF/pregunta-valueVoF.entity
 export class PreguntaMultiselected extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
+  @Column({ default: 0 })
+  puntos: number;
   @OneToMany(
     (type) => PreguntaValueVoF,
     (preguntaVof) => preguntaVof.preguntaMultiselected,
   )
   preguntasvaluesVoF: PreguntaValueVoF[];
-  
 }

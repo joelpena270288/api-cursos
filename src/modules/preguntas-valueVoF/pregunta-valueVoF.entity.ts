@@ -11,11 +11,13 @@ import { PreguntaMultiselected } from '../pregunta-multiselected/pregunta-multis
 @Entity('preguntas-valueVoF')
 export class PreguntaValueVoF extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
   @Column()
   pregunta: string;
   @Column()
   respuesta: boolean;
+  @Column({ default: 0 })
+  puntos: number;
   @ManyToOne(() => PreguntaVf, (preguntaVf) => preguntaVf.preguntasValue, {
     cascade: true,
     onDelete: 'CASCADE',
