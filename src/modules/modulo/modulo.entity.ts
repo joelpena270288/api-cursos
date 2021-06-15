@@ -12,6 +12,7 @@ import {
 import { Curso } from '../curso/curso.entity';
 import { Clase } from '../clase/clase.entity';
 import { ExamenModulo } from '../examen-modulo/examen-modulo.entity';
+import { ModuloActual } from '../modulo-actual/modulo-actual.entity';
 
 @Entity('modulos')
 export class Modulo extends BaseEntity {
@@ -33,17 +34,17 @@ export class Modulo extends BaseEntity {
   })
   curso: Curso;
 
-  @OneToOne((type) => ExamenModulo, {
+  @OneToOne((type) => ExamenModulo, (examenModulo) => examenModulo.modulo, {
     cascade: true,
     nullable: true,
-  
-  
   })
   @JoinColumn()
   examen: ExamenModulo;
 
   @OneToMany(() => Clase, (clase) => clase.modulo)
   clases: Clase[];
+  @OneToMany(() => ModuloActual, (moduloactual) => moduloactual.modulo)
+  moduloactual: ModuloActual[];
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @CreateDateColumn({ type: 'timestamp', name: 'updated_at' })

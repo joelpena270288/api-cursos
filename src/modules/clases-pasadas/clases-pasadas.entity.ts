@@ -23,8 +23,6 @@ export class ClasePasada extends BaseEntity {
   @ManyToOne(() => Clase, (clase) => clase.clasespasadas, {
     cascade: true,
     onDelete: 'CASCADE',
-    
-   
   })
   clase: Clase;
 }

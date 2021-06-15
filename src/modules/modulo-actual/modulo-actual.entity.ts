@@ -30,7 +30,7 @@ export class ModuloActual extends BaseEntity {
   @JoinColumn()
   ultimaclase: UltimaClase;
 
-  @OneToOne((type) => Modulo, {
+  @ManyToOne((type) => Modulo, (modulo) => modulo.moduloactual, {
     cascade: true,
     nullable: false,
     onDelete: 'CASCADE',

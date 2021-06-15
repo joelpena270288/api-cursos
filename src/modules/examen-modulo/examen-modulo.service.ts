@@ -16,6 +16,7 @@ import { PreguntaVfRepository } from '../pregunta-vf/pregunta-vf.repository';
 import { PreguntaModuloRepository } from '../pregunta-modulo/pregunta-modulo.repository';
 import { PreguntaValueVoFRepository } from '../preguntas-valueVoF/pregunta-valueVoF.repository';
 import { PreguntaValueVoF } from '../preguntas-valueVoF/pregunta-valueVoF.entity';
+import { CursosProgresoRepository } from '../cursos-progreso/cursos-progreso.repository';
 @Injectable()
 export class ExamenModuloService {
   constructor(
@@ -26,12 +27,19 @@ export class ExamenModuloService {
     private readonly _preguntaVoFRepository: PreguntaVfRepository,
     private readonly _preguntaModuloRepository: PreguntaModuloRepository,
     private readonly _preguntaValueVoFRepository: PreguntaValueVoFRepository,
+    private readonly _cursosProgresoRepository: CursosProgresoRepository,
   ) {}
   async getExamen(idmodulo: string, user: User): Promise<ExamenModulo> {
-    const modulo = await this._moduloRepository
-      .createQueryBuilder('modulo')
-      .leftJoinAndSelect('modulo.examen', 'examen')
-      .leftJoinAndSelect('examen.preguntasModulo', 'preguntasModulo')
+   
+    const examen = await this._examenModuloRepository
+    .createQueryBuilder('examen')
+    .leftJoinAndSelect('examen.preguntasModulo', 'preguntasModulo')
+      .innerJoin('examen.modulo', 'modulo')
+      .innerJoin('modulo.curso', 'curso')
+      .innerJoin('curso.cursosprogreso', 'cursosprogreso')
+      .innerJoin('cursosprogreso.planEstudio', 'planEstudio')
+      
+      .innerJoin('planEstudio.dashboard', 'dashboard')
       .addOrderBy('preguntasModulo.numeropregunta')
       .leftJoinAndSelect('preguntasModulo.preguntachecked', 'preguntachecked')
       .leftJoinAndSelect('preguntachecked.preguntas', 'preguntas')
@@ -49,18 +57,14 @@ export class ExamenModuloService {
       .leftJoinAndSelect(
         'preguntamultiselected.preguntasvaluesVoF',
         'preguntasvaluesVoF',
-      )
-
-      .innerJoin('modulo.curso', 'curso')
-      .innerJoin('curso.dashboard', 'dashboard')
-
+      ) 
       .where('modulo.id = :idmodulo', { idmodulo: idmodulo })
       .andWhere('dashboard.user = :user', { user: user.id })
       .getOne();
-    if (!modulo) {
+    if (!examen) {
       throw new NotFoundException('this Module does not have examen');
     }
-    return modulo.examen;
+    return examen;
   }
   async evaluarExamen(examen: ExmanenModuloInDto, user: User): Promise<number> {
     let result = 0;

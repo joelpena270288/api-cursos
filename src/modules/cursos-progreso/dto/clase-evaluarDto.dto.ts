@@ -3,7 +3,7 @@ import { IsNumber, IsString } from 'class-validator';
 import { PreguntaInDtoHtml } from '../../pregunta-html/dto/pregunta-htm-read.dto';
 
 export class ClaseEvaluarDto {
-    @IsString()
+  @IsString()
   id: string;
   preguntas: PreguntaInDtoHtml[];
 }

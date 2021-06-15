@@ -10,6 +10,7 @@ import { PreguntaMultiselectedRepository } from '../pregunta-multiselected/pregu
 import { PreguntaVfRepository } from '../pregunta-vf/pregunta-vf.repository';
 import { PreguntaModuloRepository } from '../pregunta-modulo/pregunta-modulo.repository';
 import { PreguntaValueVoFRepository } from '../preguntas-valueVoF/pregunta-valueVoF.repository';
+import { CursosProgresoRepository } from '../cursos-progreso/cursos-progreso.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -20,6 +21,7 @@ import { PreguntaValueVoFRepository } from '../preguntas-valueVoF/pregunta-value
       PreguntaVfRepository,
       PreguntaModuloRepository,
       PreguntaValueVoFRepository,
+      CursosProgresoRepository,
     ]),
     AuthModule,
   ],

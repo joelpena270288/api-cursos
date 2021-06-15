@@ -16,6 +16,7 @@ import { ModuloActualRepository } from '../modulo-actual/modulo-actual.repositor
 import { ExamenFinalRepository } from '../examen-final-curso/examen-final.repository';
 import { CursosPasadosRepository } from '../cursos-pasados/cursos-pasados.repository';
 import { ExamenModuloRepository } from '../examen-modulo/examen-modulo.repository';
+import { ModuloRepository } from '../modulo/modulo.repository';
 
 @Module({
   imports: [
@@ -33,10 +34,13 @@ import { ExamenModuloRepository } from '../examen-modulo/examen-modulo.repositor
       ExamenFinalRepository,
       CursosPasadosRepository,
       ExamenModuloRepository,
+      ModuloRepository,
     ]),
     AuthModule,
   ],
   controllers: [CursosProgresoController],
   providers: [CursosProgresoService],
 })
-export class CursosProgresoModule {}
+export class CursosProgresoModule {
+  
+}

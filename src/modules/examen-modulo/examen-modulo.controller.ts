@@ -19,7 +19,7 @@ import { ExmanenModuloInDto } from './dto/examen-modulo-in.dto';
 @Controller('examenModulo')
 export class ExamenModuloController {
   constructor(private readonly examenModuloService: ExamenModuloService) {}
-  @Roles(RoleType.ADMIN, RoleType.PROFESOR)
+  @Roles(RoleType.ADMIN, RoleType.PROFESOR, RoleType.DOCENTE)
   @UseGuards(AuthGuard(), RoleGuard)
   @Get('/getbyIdModulo/:idmodulo')
   getById(
